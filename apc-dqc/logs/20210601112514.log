@@ -1,0 +1,307 @@
+2021-06-01 11:25:14 - INFO - [RUNNING PROGRAM...]
+2021-06-01 11:25:14 - INFO - [CONNECTING TO DATABASE...]
+host: bigdata-prd-db-sqlsever-rds-beijing.cudupqbpop8x.rds.cn-north-1.amazonaws.com.cn, database: idas, user: bigdataprddb, password: *****, odbc_driver: SQL Server
+2021-06-01 11:25:15 - INFO - [FINISHED CONNECTING]
+
+2021-06-01 11:25:15 - INFO - [EXECUTING QUERY...]
+
+            SELECT P.job_id, job_name, job_desc, group_id, bus_module, job_type, script_value, expected_result, group_name, run_time, is_notify, param_type, P.param_name, param_value, user_name, password, database_type, server_desc, server_name, port_number, database_name FROM 
+            (SELECT id, job_name, job_desc, group_id, bus_module, job_type, script_value, expected_result
+            FROM t_check_job WHERE is_valid=1) J
+            LEFT JOIN
+            (SELECT job_id, param_type, param_name, param_value FROM t_check_param WHERE is_valid=1) P
+            ON J.id = P.job_id
+            LEFT JOIN 
+            (SELECT job_id, param_name, id, user_name, CAST(DecryptByKey(password) AS VARCHAR(100)) AS password, database_type, server_desc, server_name, port_number, database_name 
+            FROM (SELECT job_id, param_name, param_value FROM t_check_param WHERE param_type='connection') a LEFT JOIN (SELECT * FROM t_check_database_conn_info WHERE is_valid=1) b ON a.param_value=b.id) C
+            ON C.job_id = P.job_id AND C.param_name = P.param_name
+            LEFT JOIN
+            (SELECT id, group_name, run_time, is_notify FROM t_check_group WHERE is_valid=1) G
+            ON J.group_id = G.id
+            
+2021-06-01 11:25:15 - INFO - [FINISHED EXECUTING]
+
+2021-06-01 11:25:15 - INFO - [CONNECTING TO DATABASE...]
+host: apcbigdata-prd-redshift-prd-beijing-a.caitnxyxi7ef.cn-north-1.redshift.amazonaws.com.cn, port: 5439.0, database: prd, user: idas_etl, password: *****, ssl: False
+2021-06-01 11:25:15 - INFO - [FINISHED CONNECTING]
+
+2021-06-01 11:25:15 - INFO - [CONNECTING TO DATABASE...]
+host: 172.19.121.198, database: amore, user: MW_USER, password: *****, odbc_driver: SQL Server
+2021-06-01 11:25:16 - INFO - [FINISHED CONNECTING]
+
+2021-06-01 11:25:16 - INFO - [JOB INSTANCE CREATED] Pandas(Index=1, job_id=1, job_name='unique_primary_key_fdt_stock_sl_recpt', job_desc='校验主键是否唯一', group_id=1, bus_module='stock', job_type='sql', script_value='select count(1) from(\nselect ${column_1} from ${table_1} where ${filter_1} group by ${column_1} having count(1)>1\n);', expected_result='0', group_name='Daily_check', run_time='0 0 8 * * ?', is_notify=1)
+
+2021-06-01 11:25:16 - INFO - [JOB INSTANCE CREATED] Pandas(Index=2, job_id=2, job_name='unique_primary_key_fdt_sales_order_offtake', job_desc='校验主键是否唯一', group_id=1, bus_module='order', job_type='sql', script_value='select count(1) from(\nselect ${column_1} from ${table_1} where ${filter_1} group by ${column_1} having count(1)>1\n);', expected_result='0', group_name='Daily_check', run_time='0 0 8 * * ?', is_notify=1)
+
+2021-06-01 11:25:16 - INFO - [JOB INSTANCE CREATED] Pandas(Index=3, job_id=3, job_name='null_check_fdt_stock_sl_recpt', job_desc='非空检查', group_id=1, bus_module='stock', job_type='sql', script_value='select count(1) from( select * from ${table_1} where ${filter_1});', expected_result='0', group_name='Daily_check', run_time='0 0 8 * * ?', is_notify=1)
+
+2021-06-01 11:25:16 - INFO - [JOB INSTANCE CREATED] Pandas(Index=4, job_id=4, job_name='zipper_key_fdt_stock_sl_recpt', job_desc='校验拉链开始日期是否小于结束日期', group_id=1, bus_module='stock', job_type='sql', script_value='select count(1) from( select * from ${table_1} where ${filter_1});', expected_result='0', group_name='Daily_check', run_time='0 0 8 * * ?', is_notify=1)
+
+2021-06-01 11:25:16 - INFO - [JOB INSTANCE CREATED] Pandas(Index=5, job_id=5, job_name='zipper_key_fdt_stock_sl_recpt', job_desc='校验拉链开始日期不重复', group_id=1, bus_module='stock', job_type='sql', script_value='select count(1) from( select ${column_1},${column_2} from ${table_1} where ${filter_1} group by ${column_1},${column_2} having count(1)>1 );', expected_result='0', group_name='Daily_check', run_time='0 0 8 * * ?', is_notify=1)
+
+2021-06-01 11:25:16 - INFO - [JOB INSTANCE CREATED] Pandas(Index=6, job_id=6, job_name='zipper_fdt_stock_sl_recpt', job_desc='校验是否存在交叉链', group_id=1, bus_module='stock', job_type='sql', script_value="select sum(datediffs) from(\nselect ${column_1},effective_from_date,effective_to_date,nvl(lag(effective_to_date,1) over(partition by ${column_1} order by cn),'1970-01-01'),date_diff('day',nvl(lag(effective_to_date,1) over(partition by src_recpt_id  order by cn),'1970-01-01'),effective_from_date) as datediffs\nfrom(select ${column_1},effective_to_date,effective_from_date,row_number() over(partition by ${column_1} order by effective_from_date) as cn\nfrom ${table_1}\n));", expected_result='0', group_name='Daily_check', run_time='0 0 8 * * ?', is_notify=1)
+
+2021-06-01 11:25:16 - INFO - [JOB INSTANCE CREATED] Pandas(Index=7, job_id=7, job_name='field_type_cv_gdt_stk_sl_fct_stk_txn', job_desc='校验字段类型转换是否正确', group_id=1, bus_module='stock', job_type='sql', script_value='select count(1) from( select * from ${table_1} where ${filter_1});', expected_result='0', group_name='Daily_check', run_time='0 0 8 * * ?', is_notify=1)
+
+2021-06-01 11:25:16 - INFO - [JOB INSTANCE CREATED] Pandas(Index=8, job_id=8, job_name='bus_logic_gdt_stk_sl_fct_stk_txn', job_desc='校验业务逻辑是否正确', group_id=1, bus_module='stock', job_type='python', script_value='check_two_db_template', expected_result='0', group_name='Daily_check', run_time='0 0 8 * * ?', is_notify=1)
+
+2021-06-01 11:25:16 - INFO - [JOB INSTANCE CREATED] Pandas(Index=9, job_id=9, job_name='error_script', job_desc='脚本测试_没有参数', group_id=1, bus_module='stock', job_type='sql', script_value='select count(1) from(\nselect ${column_1} from ${table_1} where ${filter_1} group by ${column_1} having count(1)>1\n);', expected_result='0', group_name='Daily_check', run_time='0 0 8 * * ?', is_notify=1)
+
+2021-06-01 11:25:16 - INFO - [JOB INSTANCE CREATED] Pandas(Index=10, job_id=10, job_name='error_conn', job_desc='脚本测试_连接错误', group_id=1, bus_module='stock', job_type='sql', script_value='select count(1) from(\nselect ${column_1} from ${table_1} where ${filter_1} group by ${column_1} having count(1)>1\n);', expected_result='0', group_name='Daily_check', run_time='0 0 8 * * ?', is_notify=1)
+
+2021-06-01 11:25:16 - INFO - [INITIALIZING LOG TABLE...]
+INSERT INTO t_check_log VALUES ('20210601112514', 'Daily_check', 1, 'unique_primary_key_fdt_stock_sl_recpt', 'READY', 
+            NULL, NULL, NULL, 0, DEFAULT, DEFAULT), ('20210601112514', 'Daily_check', 2, 'unique_primary_key_fdt_sales_order_offtake', 'READY', 
+            NULL, NULL, NULL, 0, DEFAULT, DEFAULT), ('20210601112514', 'Daily_check', 3, 'null_check_fdt_stock_sl_recpt', 'READY', 
+            NULL, NULL, NULL, 0, DEFAULT, DEFAULT), ('20210601112514', 'Daily_check', 4, 'zipper_key_fdt_stock_sl_recpt', 'READY', 
+            NULL, NULL, NULL, 0, DEFAULT, DEFAULT), ('20210601112514', 'Daily_check', 5, 'zipper_key_fdt_stock_sl_recpt', 'READY', 
+            NULL, NULL, NULL, 0, DEFAULT, DEFAULT), ('20210601112514', 'Daily_check', 6, 'zipper_fdt_stock_sl_recpt', 'READY', 
+            NULL, NULL, NULL, 0, DEFAULT, DEFAULT), ('20210601112514', 'Daily_check', 7, 'field_type_cv_gdt_stk_sl_fct_stk_txn', 'READY', 
+            NULL, NULL, NULL, 0, DEFAULT, DEFAULT), ('20210601112514', 'Daily_check', 8, 'bus_logic_gdt_stk_sl_fct_stk_txn', 'READY', 
+            NULL, NULL, NULL, 0, DEFAULT, DEFAULT), ('20210601112514', 'Daily_check', 9, 'error_script', 'READY', 
+            NULL, NULL, NULL, 0, DEFAULT, DEFAULT), ('20210601112514', 'Daily_check', 10, 'error_conn', 'READY', 
+            NULL, NULL, NULL, 0, DEFAULT, DEFAULT)
+2021-06-01 11:25:16 - INFO - [FINISHED INITIALIZING]
+
+
+[1] unique_primary_key_fdt_stock_sl_recpt 校验主键是否唯一
+2021-06-01 11:25:16 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='RUNNING', job_begin_time='2021-06-01 11:25:16.218', update_time='2021-06-01 11:25:16.218' where job_id = 1
+2021-06-01 11:25:16 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:16 - INFO - [RUNNING JOB SCRIPT...]
+2021-06-01 11:25:16 - INFO - [EXPECTED RESULT] 0
+2021-06-01 11:25:16 - INFO - [EXECUTING QUERY...]
+select count(1) from(
+select src_recpt_id from fdt.fdt_stock_sl_recpt where effective_to_date='9999-12-31' group by src_recpt_id having count(1)>1
+);
+2021-06-01 11:25:16 - INFO - [QUERY RESULT] 0
+2021-06-01 11:25:16 - INFO - [FINISHED EXECUTING]
+
+2021-06-01 11:25:16 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:16 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='FINISHED', check_result=1, job_end_time='2021-06-01 11:25:16.550', sum_running_time=0.332, update_time='2021-06-01 11:25:16.551' where job_id = 1
+2021-06-01 11:25:16 - INFO - [FINISHED UPDATING]
+
+
+[2] unique_primary_key_fdt_sales_order_offtake 校验主键是否唯一
+2021-06-01 11:25:16 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='RUNNING', job_begin_time='2021-06-01 11:25:16.614', update_time='2021-06-01 11:25:16.614' where job_id = 2
+2021-06-01 11:25:16 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:16 - INFO - [RUNNING JOB SCRIPT...]
+2021-06-01 11:25:16 - INFO - [EXPECTED RESULT] 0
+2021-06-01 11:25:16 - INFO - [EXECUTING QUERY...]
+select count(1) from(
+select src_order_id from fdt.fdt_sales_order_offtake where effective_to_date='9999-12-31' group by src_order_id having count(1)>1
+);
+2021-06-01 11:25:16 - ERROR - [FAILED EXECUTING] EXCEPTION OCCURRED RUNNING FUNCTION execute_sql
+{'S': 'ERROR', 'C': '42703', 'M': 'column "effective_to_date" does not exist in fdt_sales_order_offtake', 'F': '/home/ec2-user/padb/src/pg/src/backend/parser/parse_expr.c', 'L': '1484', 'R': 'transformColumnRef'}
+
+2021-06-01 11:25:16 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:16 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='FAILED', check_result='-1', job_end_time='2021-06-01 11:25:16.832', sum_running_time=0.218, update_time='2021-06-01 11:25:16.832' where job_id = 2
+2021-06-01 11:25:16 - INFO - [FINISHED UPDATING]
+
+
+[3] null_check_fdt_stock_sl_recpt 非空检查
+2021-06-01 11:25:16 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='RUNNING', job_begin_time='2021-06-01 11:25:16.891', update_time='2021-06-01 11:25:16.891' where job_id = 3
+2021-06-01 11:25:16 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:16 - INFO - [RUNNING JOB SCRIPT...]
+2021-06-01 11:25:16 - INFO - [EXPECTED RESULT] 0
+2021-06-01 11:25:16 - INFO - [EXECUTING QUERY...]
+select count(1) from( select * from fdt.fdt_stock_sl_recpt where recpt_type is null);
+2021-06-01 11:25:17 - INFO - [QUERY RESULT] 0
+2021-06-01 11:25:17 - INFO - [FINISHED EXECUTING]
+
+2021-06-01 11:25:17 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:17 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='FINISHED', check_result=1, job_end_time='2021-06-01 11:25:17.133', sum_running_time=0.241, update_time='2021-06-01 11:25:17.133' where job_id = 3
+2021-06-01 11:25:17 - INFO - [FINISHED UPDATING]
+
+
+[4] zipper_key_fdt_stock_sl_recpt 校验拉链开始日期是否小于结束日期
+2021-06-01 11:25:17 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='RUNNING', job_begin_time='2021-06-01 11:25:17.193', update_time='2021-06-01 11:25:17.193' where job_id = 4
+2021-06-01 11:25:17 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:17 - INFO - [RUNNING JOB SCRIPT...]
+2021-06-01 11:25:17 - INFO - [EXPECTED RESULT] 0
+2021-06-01 11:25:17 - INFO - [EXECUTING QUERY...]
+select count(1) from( select * from fdt.fdt_stock_sl_recpt where effective_from_date > effective_to_date);
+2021-06-01 11:25:17 - INFO - [QUERY RESULT] 0
+2021-06-01 11:25:17 - INFO - [FINISHED EXECUTING]
+
+2021-06-01 11:25:17 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:17 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='FINISHED', check_result=1, job_end_time='2021-06-01 11:25:17.384', sum_running_time=0.191, update_time='2021-06-01 11:25:17.384' where job_id = 4
+2021-06-01 11:25:17 - INFO - [FINISHED UPDATING]
+
+
+[5] zipper_key_fdt_stock_sl_recpt 校验拉链开始日期不重复
+2021-06-01 11:25:17 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='RUNNING', job_begin_time='2021-06-01 11:25:17.449', update_time='2021-06-01 11:25:17.449' where job_id = 5
+2021-06-01 11:25:17 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:17 - INFO - [RUNNING JOB SCRIPT...]
+2021-06-01 11:25:17 - INFO - [EXPECTED RESULT] 0
+2021-06-01 11:25:17 - INFO - [EXECUTING QUERY...]
+select count(1) from( select src_recpt_id,effective_from_date from fdt.fdt_stock_sl_recpt where effective_to_date='9999-12-31' group by src_recpt_id,effective_from_date having count(1)>1 );
+2021-06-01 11:25:17 - INFO - [QUERY RESULT] 0
+2021-06-01 11:25:17 - INFO - [FINISHED EXECUTING]
+
+2021-06-01 11:25:17 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:17 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='FINISHED', check_result=1, job_end_time='2021-06-01 11:25:17.718', sum_running_time=0.269, update_time='2021-06-01 11:25:17.718' where job_id = 5
+2021-06-01 11:25:17 - INFO - [FINISHED UPDATING]
+
+
+[6] zipper_fdt_stock_sl_recpt 校验是否存在交叉链
+2021-06-01 11:25:17 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='RUNNING', job_begin_time='2021-06-01 11:25:17.778', update_time='2021-06-01 11:25:17.778' where job_id = 6
+2021-06-01 11:25:17 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:17 - INFO - [RUNNING JOB SCRIPT...]
+2021-06-01 11:25:17 - INFO - [EXPECTED RESULT] 0
+2021-06-01 11:25:17 - INFO - [EXECUTING QUERY...]
+select sum(datediffs) from(
+select src_recpt_id,effective_from_date,effective_to_date,nvl(lag(effective_to_date,1) over(partition by src_recpt_id order by cn),'1970-01-01'),date_diff('day',nvl(lag(effective_to_date,1) over(partition by src_recpt_id  order by cn),'1970-01-01'),effective_from_date) as datediffs
+from(select src_recpt_id,effective_to_date,effective_from_date,row_number() over(partition by src_recpt_id order by effective_from_date) as cn
+from fdt.fdt_stock_sl_recpt
+));
+2021-06-01 11:25:18 - INFO - [QUERY RESULT] 0
+2021-06-01 11:25:18 - INFO - [FINISHED EXECUTING]
+
+2021-06-01 11:25:18 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:18 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='FINISHED', check_result=1, job_end_time='2021-06-01 11:25:18.119', sum_running_time=0.341, update_time='2021-06-01 11:25:18.119' where job_id = 6
+2021-06-01 11:25:18 - INFO - [FINISHED UPDATING]
+
+
+[7] field_type_cv_gdt_stk_sl_fct_stk_txn 校验字段类型转换是否正确
+2021-06-01 11:25:18 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='RUNNING', job_begin_time='2021-06-01 11:25:18.178', update_time='2021-06-01 11:25:18.178' where job_id = 7
+2021-06-01 11:25:18 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:18 - INFO - [RUNNING JOB SCRIPT...]
+2021-06-01 11:25:18 - INFO - [EXPECTED RESULT] 0
+2021-06-01 11:25:18 - INFO - [EXECUTING QUERY...]
+select count(1) from( select * from fdt.fdt_stock_sl_recpt where apply_date>getdate());
+2021-06-01 11:25:18 - INFO - [QUERY RESULT] 0
+2021-06-01 11:25:18 - INFO - [FINISHED EXECUTING]
+
+2021-06-01 11:25:18 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:18 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='FINISHED', check_result=1, job_end_time='2021-06-01 11:25:18.370', sum_running_time=0.192, update_time='2021-06-01 11:25:18.370' where job_id = 7
+2021-06-01 11:25:18 - INFO - [FINISHED UPDATING]
+
+
+[8] bus_logic_gdt_stk_sl_fct_stk_txn 校验业务逻辑是否正确
+2021-06-01 11:25:18 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='RUNNING', job_begin_time='2021-06-01 11:25:18.441', update_time='2021-06-01 11:25:18.441' where job_id = 8
+2021-06-01 11:25:18 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:18 - INFO - [RUNNING JOB SCRIPT...]
+2021-06-01 11:25:18 - INFO - [EXPECTED RESULT] 0
+2021-06-01 11:25:18 - INFO - [EXECUTING QUERY...]
+select
+  sum(txn_qty) qty
+ ,sum(txn_amt)  amt
+from gdt.gdt_stk_sl_fct_stk_txn tx
+where shop_no=999998 and tx.org_brand_id=1001 and left(dim_date_id,6)=202104 
+and txn_code=9 and txn_direction=2 and area_type=1
+;
+2021-06-01 11:25:19 - INFO - [QUERY RESULT] [-31654, Decimal('-9979790.00')]
+2021-06-01 11:25:19 - INFO - [FINISHED EXECUTING]
+
+2021-06-01 11:25:19 - INFO - [EXECUTING QUERY...]
+declare @month varchar(10)
+set @month='2021-04'
+
+select 
+sum(count)*-1 as qty
+,sum(price*count)*-1 as amt
+from
+(
+select a.id,fromlogicid,logicstockname as fromstockname
+from stock_t_stock_receipt a with(nolock)
+inner join stock_t_logic_stock c with(nolock) on a.fromlogicid=c.id
+where a.customerid=1001 and receipttype=9  and convert(varchar(7),submitdate,120)=@month and  a.fromlogicid=18
+)ar
+inner join 
+(
+select a.id,convert(varchar(100),submitdate,112)as saledate,e.dealerid,dealername,a.tologicid,c.logicstockname as tostockname,manufacturercode,count,price
+from stock_t_stock_receipt a
+inner join stock_tr_stock_receipt_sku b with(nolock) on a.id=b.receiptid
+inner join stock_t_logic_stock c with(nolock) on a.tologicid=c.id
+inner join user_t_organization d with(nolock) on d.id=a.fromorgid
+inner join user_t_dealer e with(nolock) on  e.id=d.dealerid
+inner join product_t_sku f  with(nolock)on  b.skuid=f.id
+inner join product_t_product g with(nolock) on f.productid=g.id
+where a.customerid=1001 and receipttype=9  and convert(varchar(7),submitdate,120)=@month and a.tologicid!=18 and processnodestep='end'
+and d.type=2
+)sr on ar.id=sr.id
+;
+2021-06-01 11:25:19 - INFO - [QUERY RESULT] (-34282, Decimal('-10797835.00'))
+2021-06-01 11:25:19 - INFO - [FINISHED EXECUTING]
+
+2021-06-01 11:25:19 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:19 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='FINISHED', check_result=0, job_end_time='2021-06-01 11:25:19.820', sum_running_time=1.379, update_time='2021-06-01 11:25:19.820' where job_id = 8
+2021-06-01 11:25:19 - INFO - [FINISHED UPDATING]
+
+
+[9] error_script 脚本测试_没有参数
+2021-06-01 11:25:19 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='RUNNING', job_begin_time='2021-06-01 11:25:19.886', update_time='2021-06-01 11:25:19.886' where job_id = 9
+2021-06-01 11:25:19 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:19 - INFO - [RUNNING JOB SCRIPT...]
+2021-06-01 11:25:19 - INFO - [EXPECTED RESULT] 0
+2021-06-01 11:25:19 - INFO - [EXECUTING QUERY...]
+select count(1) from(
+select src_recpt_id from fdt.fdt_stock_sl_recpt where ${filter_1} group by src_recpt_id having count(1)>1
+);
+2021-06-01 11:25:20 - ERROR - [FAILED EXECUTING] EXCEPTION OCCURRED RUNNING FUNCTION execute_sql
+{'S': 'ERROR', 'C': '42601', 'M': 'syntax error at or near "$"', 'P': '77', 'F': '/home/ec2-user/padb/src/pg/src/backend/parser/parser_scan.l', 'L': '719', 'R': 'yyerror'}
+
+2021-06-01 11:25:20 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:20 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='FAILED', check_result='-1', job_end_time='2021-06-01 11:25:20.075', sum_running_time=0.189, update_time='2021-06-01 11:25:20.075' where job_id = 9
+2021-06-01 11:25:20 - INFO - [FINISHED UPDATING]
+
+
+[10] error_conn 脚本测试_连接错误
+2021-06-01 11:25:20 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='RUNNING', job_begin_time='2021-06-01 11:25:20.152', update_time='2021-06-01 11:25:20.152' where job_id = 10
+2021-06-01 11:25:20 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:20 - INFO - [RUNNING JOB SCRIPT...]
+2021-06-01 11:25:20 - INFO - [EXPECTED RESULT] 0
+2021-06-01 11:25:20 - INFO - [EXECUTING QUERY...]
+select count(1) from(
+select src_recpt_id from fdt.fdt_stock_sl_recpt where effective_to_date='9999-12-31' group by src_recpt_id having count(1)>1
+);
+2021-06-01 11:25:20 - ERROR - [FAILED EXECUTING] EXCEPTION OCCURRED RUNNING FUNCTION execute_sql
+('42000', '[42000] [Microsoft][ODBC SQL Server Driver][SQL Server]“;”附近有语法错误。 (102) (SQLExecDirectW)')
+
+2021-06-01 11:25:20 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:20 - INFO - [UPDATING LOG...]
+UPDATE t_check_log set run_status='FAILED', check_result='-1', job_end_time='2021-06-01 11:25:20.263', sum_running_time=0.112, update_time='2021-06-01 11:25:20.263' where job_id = 10
+2021-06-01 11:25:20 - INFO - [FINISHED UPDATING]
+
+2021-06-01 11:25:20 - INFO - [FINISHED RUNNING]
+
+2021-06-01 11:25:20 - INFO - [TOTAL RUNNING TIME] 0:00:05.560352

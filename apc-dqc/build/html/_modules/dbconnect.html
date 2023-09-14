@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>dbconnect &mdash; DQC 1.0.0 文档</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DQC
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">数据模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../environment.html">安装和部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment.html">配置和运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">开发参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debug.html">日志和调试</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DQC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">模块代码</a> &raquo;</li>
+        
+      <li>dbconnect</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>dbconnect 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;A module-level docstring</span>
+
+<span class="sd">Notice the comment above the docstring specifying the encoding.</span>
+<span class="sd">Docstrings do appear in the bytecode, so you can access this through</span>
+<span class="sd">the ``__doc__`` attribute. This is also what you&#39;ll see if you call</span>
+<span class="sd">help() on a module or any other Python object.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">pyodbc</span>  <span class="c1"># support for sql server connection</span>
+<span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">ODBCDRIVER</span>  <span class="c1"># specified odbc driver for sql server</span>
+<span class="kn">import</span> <span class="nn">redshift_connector</span>  <span class="c1"># support for redshift connection</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">get_logger</span>  <span class="c1"># logging</span>
+
+
+<div class="viewcode-block" id="SQLServerDB"><a class="viewcode-back" href="../dbconnect.html#dbconnect.SQLServerDB">[文档]</a><span class="k">class</span> <span class="nc">SQLServerDB</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Creating a SQL Server DB instance&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SQLServerDB.__init__"><a class="viewcode-back" href="../dbconnect.html#dbconnect.SQLServerDB.__init__">[文档]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">user</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">odbc_driver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">ODBCDRIVER</span><span class="p">):</span>
+
+        <span class="n">get_logger</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;host: </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s1">, database: </span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">, user: </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">, password: *****, odbc_driver: </span><span class="si">{</span><span class="n">odbc_driver</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;DRIVER=</span><span class="se">{{</span><span class="si">{</span><span class="n">odbc_driver</span><span class="si">}</span><span class="se">}}</span><span class="s2">;SERVER=</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">;DATABASE=</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s2">;UID=</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">;PWD=</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CONNECTION ESTABLISHED]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[FAILED CONNECTING] </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RedshiftDB"><a class="viewcode-back" href="../dbconnect.html#dbconnect.RedshiftDB">[文档]</a><span class="k">class</span> <span class="nc">RedshiftDB</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Creating a Redshift DB instance with connection attribute &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RedshiftDB.__init__"><a class="viewcode-back" href="../dbconnect.html#dbconnect.RedshiftDB.__init__">[文档]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">user</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ssl</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+
+        <span class="n">get_logger</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;host: </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s1">, port: </span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">, database: </span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">, user: </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">, password: *****, ssl: </span><span class="si">{</span><span class="n">ssl</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">redshift_connector</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+                <span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">port</span><span class="p">),</span> <span class="n">ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CONNECTION ESTABLISHED]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[FAILED CONNECTING] </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="connect"><a class="viewcode-back" href="../dbconnect.html#dbconnect.connect">[文档]</a><span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="n">dict_conn</span><span class="p">,</span> <span class="n">dbs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">db_id</span> <span class="ow">in</span> <span class="n">dict_conn</span><span class="p">:</span>
+        <span class="n">dict_db</span> <span class="o">=</span> <span class="n">dict_conn</span><span class="p">[</span><span class="n">db_id</span><span class="p">]</span>
+        <span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;[CONNECTING TO DATABASE...]&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;database_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;REDSHIFT&#39;</span><span class="p">:</span>
+            <span class="n">dbs</span><span class="p">[</span><span class="n">db_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">RedshiftDB</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;server_name&#39;</span><span class="p">],</span> <span class="n">port</span><span class="o">=</span><span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;port_number&#39;</span><span class="p">],</span>
+                                    <span class="n">database</span><span class="o">=</span><span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;database_name&#39;</span><span class="p">],</span>
+                                    <span class="n">user</span><span class="o">=</span><span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;user_name&#39;</span><span class="p">],</span> <span class="n">password</span><span class="o">=</span><span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;database_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;MSSQL&#39;</span><span class="p">:</span>
+            <span class="n">dbs</span><span class="p">[</span><span class="n">db_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">SQLServerDB</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;server_name&#39;</span><span class="p">],</span> <span class="n">database</span><span class="o">=</span><span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;database_name&#39;</span><span class="p">],</span>
+                                     <span class="n">user</span><span class="o">=</span><span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;user_name&#39;</span><span class="p">],</span> <span class="n">password</span><span class="o">=</span><span class="n">dict_db</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">dbs</span></div>
+
+<span class="c1"># TODO add support for other database engines</span>
+<span class="c1"># class BigQueryDB(DB):</span>
+<span class="c1">#     def __init__(self, location: str = None, project: str = None, dataset: str = None,</span>
+<span class="c1">#                  gcloud_gcs_bucket_name=None, service_account_private_key_file: str = None,</span>
+<span class="c1">#                  use_legacy_sql: bool = False):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         Connection information for a BigQueryDB database</span>
+
+<span class="c1">#         Enabling the BigQuery API and Service account json credentials are required. For more:</span>
+<span class="c1">#         https://cloud.google.com/bigquery/docs/quickstarts/quickstart-client-libraries#before-you-begin</span>
+
+<span class="c1">#         Args:</span>
+<span class="c1">#             location: Default geographic location to use when creating datasets or determining where jobs should run</span>
+<span class="c1">#             project: Default project to use for requests.</span>
+<span class="c1">#             dataset: Default dataset to use for requests.</span>
+<span class="c1">#             service_account_private_key_file: The private key file provided by Google when creating a service account. (it&#39;s a JSON file).</span>
+<span class="c1">#             gcloud_gcs_bucket_name: The Google Cloud Storage bucked used as cache for loading data</span>
+<span class="c1">#             use_legacy_sql: (default: false) If true, use the old BigQuery SQL dialect is used.</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         self.service_account_private_key_file = service_account_private_key_file</span>
+<span class="c1">#         self.location = location</span>
+<span class="c1">#         self.project = project</span>
+<span class="c1">#         self.dataset = dataset</span>
+<span class="c1">#         self.gcloud_gcs_bucket_name = gcloud_gcs_bucket_name</span>
+<span class="c1">#         self.use_legacy_sql = use_legacy_sql</span>
+
+
+<span class="c1"># class MysqlDB(DB):</span>
+<span class="c1">#     def __init__(self, host: str = None, port: int = None, database: str = None,</span>
+<span class="c1">#                  user: str = None, password: str = None, ssl: bool = None, charset: str = None):</span>
+<span class="c1">#         self.host = host</span>
+<span class="c1">#         self.database = database</span>
+<span class="c1">#         self.port = port</span>
+<span class="c1">#         self.user = user</span>
+<span class="c1">#         self.password = password</span>
+<span class="c1">#         self.ssl = ssl</span>
+<span class="c1">#         self.charset = charset</span>
+
+
+<span class="c1"># class OracleDB(DB):</span>
+<span class="c1">#     def __init__(self, host: str = None, port: int = 0, endpoint: str = None, user: str = None, password: str = None):</span>
+<span class="c1">#         self.host = host</span>
+<span class="c1">#         self.port = port</span>
+<span class="c1">#         self.endpoint = endpoint</span>
+<span class="c1">#         self.user = user</span>
+<span class="c1">#         self.password = password</span>
+
+
+<span class="c1"># class SQLiteDB(DB):</span>
+<span class="c1">#     def __init__(self, file_name: pathlib.Path) -&gt; None:</span>
+<span class="c1">#         self.file_name = file_name</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; 版权所有 2021, Tingting Chen.
+
+    </p>
+  </div>
+    
+    
+    
+    利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

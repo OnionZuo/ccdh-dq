@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>utils &mdash; DQC 1.0.0 文档</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DQC
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">数据模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment.html">部署和使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debug.html">常见报错和原因</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DQC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">模块代码</a> &raquo;</li>
+        
+      <li>utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>utils 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodWrapperType</span>
+<span class="kn">from</span> <span class="nn">pytz</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">TZ</span><span class="p">,</span> <span class="n">MASTERTBS</span><span class="p">,</span> <span class="n">EMAILCONFIG</span><span class="p">,</span> <span class="n">EMAIL_SUCCESS</span><span class="p">,</span> <span class="n">EMAIL_FAIL</span>
+<span class="kn">import</span> <span class="nn">smtplib</span>
+<span class="kn">from</span> <span class="nn">email.mime.multipart</span> <span class="kn">import</span> <span class="n">MIMEMultipart</span>
+<span class="kn">from</span> <span class="nn">email.mime.text</span> <span class="kn">import</span> <span class="n">MIMEText</span>
+<span class="kn">from</span> <span class="nn">email.header</span> <span class="kn">import</span> <span class="n">Header</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="n">tz</span> <span class="o">=</span> <span class="n">timezone</span><span class="p">(</span><span class="n">TZ</span><span class="p">)</span> 
+<span class="n">run_id</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="timetz"><a class="viewcode-back" href="../utils.html#utils.timetz">[文档]</a><span class="k">def</span> <span class="nf">timetz</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span><span class="o">.</span><span class="n">timetuple</span><span class="p">()</span></div>
+
+    
+<span class="c1"># region logging</span>
+<span class="n">logpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;logs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s1">.log&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;logs/&#39;</span><span class="p">)):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;logs/&#39;</span><span class="p">))</span>
+<div class="viewcode-block" id="DispatchingFormatter"><a class="viewcode-back" href="../utils.html#utils.DispatchingFormatter">[文档]</a><span class="k">class</span> <span class="nc">DispatchingFormatter</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formatters</span><span class="p">,</span> <span class="n">default_formatter</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_formatters</span> <span class="o">=</span> <span class="n">formatters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_formatter</span> <span class="o">=</span> <span class="n">default_formatter</span>
+
+<div class="viewcode-block" id="DispatchingFormatter.format"><a class="viewcode-back" href="../utils.html#utils.DispatchingFormatter.format">[文档]</a>    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_formatter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">formatter</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>     </div></div>
+    
+<div class="viewcode-block" id="get_logger"><a class="viewcode-back" href="../utils.html#utils.get_logger">[文档]</a><span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="n">default_format</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates/Gets the logger</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">default_format</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;detail&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">timetz</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">f_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">logpath</span><span class="p">)</span>
+        <span class="n">f_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span>
+            <span class="n">DispatchingFormatter</span><span class="p">(</span>
+                <span class="p">{</span><span class="s1">&#39;detail&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)},</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">f_handler</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">logger</span></div>
+
+<div class="viewcode-block" id="exception_logging"><a class="viewcode-back" href="../utils.html#utils.exception_logging">[文档]</a><span class="k">def</span> <span class="nf">exception_logging</span><span class="p">(</span><span class="n">log_info</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A decorator that wraps the passed in function and logging info and error</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">log_info</span><span class="si">}</span><span class="s1">...]&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">func</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[FINISHED </span><span class="si">{</span><span class="n">log_info</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">func</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">err</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;EXCEPTION OCCURRED RUNNING FUNCTION </span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[FAILED </span><span class="si">{</span><span class="n">log_info</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">] </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">args</span> <span class="ow">and</span> <span class="s1">&#39;dbconnect&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+                <span class="k">return</span> <span class="s1">&#39;e&#39;</span>
+        <span class="k">return</span> <span class="n">wrapper</span>
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+<span class="n">utils_logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+
+<span class="c1"># endregion</span>
+    
+
+<span class="c1"># region email notification</span>
+
+<div class="viewcode-block" id="send_email"><a class="viewcode-back" href="../utils.html#utils.send_email">[文档]</a><span class="k">def</span> <span class="nf">send_email</span><span class="p">(</span><span class="n">group_id</span><span class="p">,</span> <span class="n">job_instances</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">mtype</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+  
+    <span class="n">group_id</span> <span class="o">=</span> <span class="s1">&#39;ALL&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">group_id</span> <span class="k">else</span> <span class="n">group_id</span>
+
+    <span class="k">with</span> <span class="n">logpath</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">log_content</span>  <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">log_content</span> <span class="o">=</span> <span class="n">log_content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;- ERROR -&#39;</span><span class="p">,</span><span class="s1">&#39;- &lt;span style=&quot;color:red&quot;&gt;ERROR&lt;/span&gt; -&#39;</span><span class="p">)</span>
+    
+   
+    <span class="n">subject</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;[DQC Group </span><span class="si">{</span><span class="n">group_id</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s1">] &#39;</span>
+    
+    <span class="k">if</span> <span class="n">mtype</span><span class="p">:</span>
+        <span class="n">subject</span> <span class="o">+=</span> <span class="n">mtype</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">EMAIL_FAIL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">log_content</span><span class="o">=</span><span class="n">log_content</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>     
+        <span class="n">red_list</span> <span class="o">=</span> <span class="p">[]</span>   
+        <span class="n">green_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">content_d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;count&#39;</span><span class="p">:{</span><span class="n">_</span><span class="p">:</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pass&#39;</span><span class="p">,</span> <span class="s1">&#39;fail&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]},</span> 
+                        <span class="s1">&#39;content&#39;</span><span class="p">:{</span><span class="n">_</span><span class="p">:</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pass&#39;</span><span class="p">,</span> <span class="s1">&#39;fail&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]}}</span>
+        
+        <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">job_instances</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">job</span><span class="o">.</span><span class="n">check_result</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][</span><span class="s1">&#39;pass&#39;</span><span class="p">]</span> <span class="o">+=</span><span class="sa">f</span><span class="s1">&#39;&lt;p&gt;[</span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">] </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&lt;/p&gt;&#39;</span>
+                <span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="s1">&#39;pass&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">green_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">] </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">desc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">job</span><span class="o">.</span><span class="n">check_result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][</span><span class="s1">&#39;fail&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&lt;p&gt;[</span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">] </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> - expected </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">expected_result</span><span class="si">}</span><span class="s1"> get </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">run_result</span><span class="si">}</span><span class="s1">&lt;/p&gt;&#39;</span>
+                <span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="s1">&#39;fail&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">red_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">] </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">desc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">+=</span><span class="sa">f</span><span class="s1">&#39;&lt;p&gt;[</span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">] </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&lt;/p&gt;&#39;</span>
+                <span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">red_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">] </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">desc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">red_list</span><span class="p">:</span>
+            <span class="n">log_content</span> <span class="o">=</span> <span class="n">log_content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;&lt;span style=&quot;color:red&quot;&gt;&lt;b&gt;</span><span class="si">{</span><span class="n">_</span><span class="si">}</span><span class="s1">&lt;/span&gt;&lt;/b&gt;&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">green_list</span><span class="p">:</span>
+            <span class="n">log_content</span> <span class="o">=</span> <span class="n">log_content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;&lt;span style=&quot;color:green&quot;&gt;&lt;b&gt;</span><span class="si">{</span><span class="n">_</span><span class="si">}</span><span class="s1">&lt;/span&gt;&lt;/b&gt;&#39;</span><span class="p">)</span>    
+    
+        <span class="n">ttl_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;&lt;p&gt;</span><span class="si">{</span><span class="n">ttl_count</span><span class="si">}</span><span class="s1">  jobs: </span><span class="si">{</span><span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="si">}</span><span class="s1"> running failed, </span><span class="si">{</span><span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="s1">&#39;fail&#39;</span><span class="p">]</span><span class="si">}</span><span class="s1"> check failed, </span><span class="si">{</span><span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="s1">&#39;pass&#39;</span><span class="p">]</span><span class="si">}</span><span class="s1"> check passed&lt;/p&gt;&#39;&#39;&#39;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">EMAIL_SUCCESS</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">summary</span><span class="o">=</span><span class="n">summary</span><span class="p">,</span><span class="n">pass_content</span><span class="o">=</span><span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][</span><span class="s1">&#39;pass&#39;</span><span class="p">],</span><span class="n">fail_content</span><span class="o">=</span><span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][</span><span class="s1">&#39;fail&#39;</span><span class="p">],</span><span class="n">error_content</span><span class="o">=</span><span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">],</span><span class="n">log_content</span><span class="o">=</span><span class="n">log_content</span><span class="p">)</span> 
+        <span class="k">if</span> <span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="s1">&#39;pass&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">{</span><span class="n">ttl_count</span><span class="p">}:</span>
+            <span class="n">subject</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;✔ </span><span class="si">{</span><span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="s1">&#39;pass&#39;</span><span class="p">]</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">ttl_count</span><span class="si">}</span><span class="s1"> PASSED&#39;&#39;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">subject</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;✘ </span><span class="si">{</span><span class="n">content_d</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="s1">&#39;pass&#39;</span><span class="p">]</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">ttl_count</span><span class="si">}</span><span class="s1"> PASSED&#39;&#39;&#39;</span>
+
+    
+    <span class="c1"># email configuration</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">smtplib</span><span class="o">.</span><span class="n">SMTP</span><span class="p">(</span><span class="n">host</span> <span class="o">=</span><span class="n">EMAILCONFIG</span><span class="p">[</span><span class="s1">&#39;smtp_host&#39;</span><span class="p">],</span> <span class="n">port</span> <span class="o">=</span> <span class="n">EMAILCONFIG</span><span class="p">[</span><span class="s1">&#39;smtp_port&#39;</span><span class="p">])</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">EMAILCONFIG</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">],</span> <span class="n">EMAILCONFIG</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">MIMEMultipart</span><span class="p">()</span>
+    <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">MIMEText</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="n">_charset</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;From&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">EMAILCONFIG</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">]</span>
+    <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Subject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">sendmail</span><span class="p">(</span><span class="n">EMAILCONFIG</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">],</span> <span class="n">EMAILCONFIG</span><span class="p">[</span><span class="s1">&#39;recipient&#39;</span><span class="p">],</span> <span class="n">msg</span><span class="o">.</span><span class="n">as_string</span><span class="p">())</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>       
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+<span class="c1"># endregion</span>
+
+<span class="c1"># region database query/update</span>
+
+
+<div class="viewcode-block" id="execute_sql"><a class="viewcode-back" href="../utils.html#utils.execute_sql">[文档]</a><span class="nd">@exception_logging</span><span class="p">(</span><span class="n">log_info</span><span class="o">=</span><span class="s1">&#39;EXECUTING QUERY&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">execute_sql</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">sql</span><span class="p">,</span> <span class="n">fetch</span><span class="o">=</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="n">log_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Executes sql using db connection and fetches results</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    db : DB</span>
+<span class="sd">    sql : str</span>
+<span class="sd">    fetch : str, optional    </span>
+<span class="sd">        one: fetch a single value (default)</span>
+<span class="sd">        many: fetch the first row as a tuple</span>
+<span class="sd">        df: fetch all as a df</span>
+<span class="sd">    log_flag: str, optional</span>
+<span class="sd">        a flag to log fetched results</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    result</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">get_logger</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">db</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fetch</span> <span class="o">==</span> <span class="s1">&#39;df&#39;</span><span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">description</span><span class="p">]</span> 
+            <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">:</span>
+                    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="n">rows</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">cols</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">fetch</span> <span class="o">==</span> <span class="s1">&#39;one&#39;</span> <span class="k">else</span> <span class="n">results</span>
+        <span class="k">if</span> <span class="n">log_flag</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>        
+            <span class="n">utils_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[QUERY RESULT] </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> 
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+
+<div class="viewcode-block" id="get_job_info"><a class="viewcode-back" href="../utils.html#utils.get_job_info">[文档]</a><span class="k">def</span> <span class="nf">get_job_info</span><span class="p">(</span><span class="n">db_master</span><span class="p">,</span> <span class="n">group_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Gets jobs from specified group using master db connection</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    db_master : DB</span>
+<span class="sd">    group_id : int</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df_job</span>
+<span class="sd">    dict_conn</span>
+<span class="sd">    dict_param</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">db_master</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
+        <span class="n">job_cond</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;group_id=</span><span class="si">{</span><span class="n">group_id</span><span class="si">}</span><span class="s1"> AND is_valid=1&#39;</span> <span class="k">if</span> <span class="n">group_id</span> <span class="k">else</span> <span class="s1">&#39;is_valid=1&#39;</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;OPEN SYMMETRIC KEY DQCSymmetric DECRYPTION BY CERTIFICATE DQCCert&#39;</span><span class="p">)</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            SELECT P.job_id, job_name, job_desc, group_id, bus_module, job_type, script_value, expected_result, group_name, run_time, is_notify, param_type, P.param_name, param_value, user_name, password, database_type, server_desc, server_name, port_number, database_name FROM </span>
+<span class="s1">            (SELECT id, job_name, job_desc, group_id, bus_module, job_type, script_value, expected_result</span>
+<span class="s1">            FROM </span><span class="si">{</span><span class="n">MASTERTBS</span><span class="p">[</span><span class="s1">&#39;JOB&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> WHERE </span><span class="si">{</span><span class="n">job_cond</span><span class="si">}</span><span class="s1">) J</span>
+<span class="s1">            LEFT JOIN</span>
+<span class="s1">            (SELECT job_id, param_type, param_name, param_value FROM </span><span class="si">{</span><span class="n">MASTERTBS</span><span class="p">[</span><span class="s1">&#39;JOBPARAM&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> WHERE is_valid=1) P</span>
+<span class="s1">            ON J.id = P.job_id</span>
+<span class="s1">            LEFT JOIN </span>
+<span class="s1">            (SELECT job_id, param_name, id, user_name, CAST(DecryptByKey(password) AS VARCHAR(100)) AS password, database_type, server_desc, server_name, port_number, database_name </span>
+<span class="s1">            FROM (SELECT job_id, param_name, param_value FROM </span><span class="si">{</span><span class="n">MASTERTBS</span><span class="p">[</span><span class="s1">&#39;JOBPARAM&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> WHERE param_type=&#39;connection&#39;) a LEFT JOIN (SELECT * FROM </span><span class="si">{</span><span class="n">MASTERTBS</span><span class="p">[</span><span class="s1">&#39;JOBCONN&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> WHERE is_valid=1) b ON a.param_value=b.id) C</span>
+<span class="s1">            ON C.job_id = P.job_id AND C.param_name = P.param_name</span>
+<span class="s1">            LEFT JOIN</span>
+<span class="s1">            (SELECT id, group_name, run_time, is_notify FROM </span><span class="si">{</span><span class="n">MASTERTBS</span><span class="p">[</span><span class="s1">&#39;JOBGROUP&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> WHERE is_valid=1) G</span>
+<span class="s1">            ON J.group_id = G.id</span>
+<span class="s1">            &#39;&#39;&#39;</span>
+        <span class="n">df_job_info</span> <span class="o">=</span> <span class="n">execute_sql</span><span class="p">(</span><span class="n">db_master</span><span class="p">,</span> <span class="n">sql</span><span class="p">,</span> <span class="s1">&#39;df&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;CLOSE SYMMETRIC KEY DQCSymmetric&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># no job fetched</span>
+        <span class="k">if</span> <span class="n">df_job_info</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">utils_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[NO JOB IN GROUP </span><span class="si">{</span><span class="n">group_id</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        
+        <span class="c1"># jobs fetched</span>
+        <span class="n">dict_param</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df_job_info</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">dict_param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">job_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="n">dict_param</span><span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">job_id</span><span class="p">][</span><span class="n">row</span><span class="o">.</span><span class="n">param_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">param_value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dict_param</span><span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">job_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">row</span><span class="o">.</span><span class="n">param_name</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">param_value</span><span class="p">,}</span>
+        <span class="n">df_job</span> <span class="o">=</span> <span class="n">df_job_info</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;job_id&#39;</span><span class="p">,</span> <span class="s1">&#39;job_name&#39;</span><span class="p">,</span> <span class="s1">&#39;job_desc&#39;</span><span class="p">,</span> <span class="s1">&#39;group_id&#39;</span><span class="p">,</span> <span class="s1">&#39;bus_module&#39;</span><span class="p">,</span> <span class="s1">&#39;job_type&#39;</span><span class="p">,</span> <span class="s1">&#39;script_value&#39;</span><span class="p">,</span> <span class="s1">&#39;expected_result&#39;</span><span class="p">,</span> <span class="s1">&#39;group_name&#39;</span><span class="p">,</span> <span class="s1">&#39;run_time&#39;</span><span class="p">,</span> <span class="s1">&#39;is_notify&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;job_id&#39;</span><span class="p">,</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">df_conn</span> <span class="o">=</span> <span class="n">df_job_info</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_job_info</span><span class="p">[</span><span class="s1">&#39;user_name&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;param_value&#39;</span><span class="p">,</span> <span class="s1">&#39;user_name&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="s1">&#39;database_type&#39;</span><span class="p">,</span> <span class="s1">&#39;server_desc&#39;</span><span class="p">,</span> <span class="s1">&#39;server_name&#39;</span><span class="p">,</span> <span class="s1">&#39;port_number&#39;</span><span class="p">,</span> <span class="s1">&#39;database_name&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;param_value&#39;</span><span class="p">)</span> 
+        <span class="n">dict_conn</span> <span class="o">=</span> <span class="n">df_conn</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df_job</span><span class="p">,</span> <span class="n">dict_conn</span><span class="p">,</span> <span class="n">dict_param</span></div>
+
+<div class="viewcode-block" id="init_logtb"><a class="viewcode-back" href="../utils.html#utils.init_logtb">[文档]</a><span class="nd">@exception_logging</span><span class="p">(</span><span class="s1">&#39;INITIALIZING LOG TABLE&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">init_logtb</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">init_logs</span><span class="p">):</span> 
+    <span class="k">with</span> <span class="n">db</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
+        <span class="c1"># move data in log table into log_his table</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;INSERT INTO </span><span class="si">{</span><span class="n">MASTERTBS</span><span class="p">[</span><span class="s1">&#39;LOGHIS&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> SELECT * FROM </span><span class="si">{</span><span class="n">MASTERTBS</span><span class="p">[</span><span class="s1">&#39;LOG&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;TRUNCATE TABLE </span><span class="si">{</span><span class="n">MASTERTBS</span><span class="p">[</span><span class="s1">&#39;LOG&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="c1"># add new job data to log table</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;INSERT INTO </span><span class="si">{</span><span class="n">MASTERTBS</span><span class="p">[</span><span class="s1">&#39;LOG&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> VALUES </span><span class="si">{</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">init_logs</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;</span>
+        <span class="n">get_logger</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="update_logtb"><a class="viewcode-back" href="../utils.html#utils.update_logtb">[文档]</a><span class="nd">@exception_logging</span><span class="p">(</span><span class="s1">&#39;UPDATING LOG&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">update_logtb</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">update_type</span><span class="p">,</span> <span class="n">update_dict</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">db</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">update_type</span> <span class="o">==</span> <span class="s1">&#39;begin&#39;</span><span class="p">:</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">begin_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
+            <span class="n">update_dict</span><span class="p">[</span><span class="s1">&#39;job_begin_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">begin_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S.</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">update_type</span> <span class="o">==</span> <span class="s1">&#39;end&#39;</span><span class="p">:</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
+            <span class="n">update_dict</span><span class="p">[</span><span class="s1">&#39;job_end_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S.</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">time_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">end_time</span><span class="o">-</span><span class="n">job</span><span class="o">.</span><span class="n">begin_time</span><span class="p">)</span>
+            <span class="n">update_dict</span><span class="p">[</span><span class="s1">&#39;sum_running_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">time_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">1000000</span><span class="o">+</span><span class="nb">float</span><span class="p">(</span><span class="n">time_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="nb">float</span><span class="p">(</span><span class="n">time_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">60</span><span class="o">+</span><span class="nb">float</span><span class="p">(</span><span class="n">time_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="mi">3600</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">update_dict</span><span class="p">[</span><span class="s1">&#39;update_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S.</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">update_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">!r}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">update_dict</span><span class="o">.</span><span class="n">items</span><span class="p">())])</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;UPDATE </span><span class="si">{</span><span class="n">MASTERTBS</span><span class="p">[</span><span class="s1">&#39;LOG&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> set </span><span class="si">{</span><span class="n">update_str</span><span class="si">}</span><span class="s1"> where job_id = </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;</span>
+        <span class="n">get_logger</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+  
+
+<span class="c1"># endregion</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; 版权所有 2021, Sharon Lau.
+
+    </p>
+  </div>
+    
+    
+    
+    利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

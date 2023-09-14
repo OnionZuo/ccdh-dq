@@ -1,0 +1,364 @@
+
+
+=====================
+配置和运行
+=====================
+
+为了使用DQC脚本进行校验任务自动执行，需要在元数据库进行任务配置。目前任务采取顺序执行，支持命令行参数指定校验组。
+
+元数据库连接和校验组配置
+------------------------
+首先，将元数据连接信息存储在 :ref:`连接信息配置表` id=1
+
+.. list-table:: 
+   :widths: 5 5 5 5 5 60 5 5 5
+   :header-rows: 1
+
+
+   * - id
+     - user_name
+     - password
+     - database_type	
+     - server_desc
+     - server_name	
+     - port_number
+     - database_name
+     - is_valid
+   * - 1
+     - 'bigdataprddb'
+     - 'your-password'
+     - 'MSSQL'	
+     - 'Portal'
+     - 'bigdata-prd-db-sqlsever-rds-beijing.cudupqbpop8x.rds.cn-north-1.amazonaws.com.cn'	
+     - 1433
+     - 'idas'
+     - 1
+
+     
+:ref:`校验组表` 配置：
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table:: 
+   :widths: 12 22 22 22 22
+   :header-rows: 1
+
+   * - id
+     - group_name
+     - run_time
+     - is_notify
+     - is_valid
+   * - 1
+     - 'Daily_check'
+     - '10 0 \* \* \*'
+     - 1
+     - 1
+
+
+
+任务配置
+---------------
+当前支持的任务类型包括SQL任务和Python任务，以下为不同类型校验任务配置示例
+
+
+SQL任务
+~~~~~~~~~~
+
+``示例一：检验是否主键唯一``
+""""""""""""""""""""""""""""""
+该任务需要实现连接IDAS服务器的prd数据库并执行以下查询语句
+
+.. code-block:: sql
+
+    SELECT  COUNT(1)
+    FROM 
+    (
+        SELECT  src_recpt_id
+        FROM fdt.fdt_stock_sl_recpt
+        WHERE effective_to_date='9999-12-31' 
+        GROUP BY  src_recpt_id
+        HAVING COUNT(1)>1
+    ) 
+
+:ref:`校验任务表` 配置：
+''''''''''''''''''''''''''''''
+
+.. list-table:: 
+   :widths: 20 20 60
+   :header-rows: 1
+
+   * - 字段名称 (en)
+     - 字段名称
+     - 值
+   * - id
+     - 校验任务ID
+     - 1
+   * - job_name
+     - 校验任务名称
+     - 'unique_primary_key_fdt_stock_sl_recpt'
+   * - job_desc
+     - 校验任务描述
+     - '校验主键是否唯一'
+   * - group_id	
+     - 校验组ID
+     - 1
+   * - bus_module
+     - 业务板块
+     - 'stock'
+   * - job_type
+     - 校验任务类型
+     - 'sql'
+   * - script_value
+     - 校验任务脚本
+     - 'select count(1) from(select ${column_1} from ${table_1} where $filter_1} group by ${column_1} having count(1)>1'
+   * - expected_result
+     - 预期结果
+     - '0'
+   * - is_valid
+     - 是否生效
+     - 1
+
+
+
+:ref:`参数表` 配置：
+''''''''''''''''''''''''''''''
+
+.. list-table:: 
+   :widths: 12 22 22 22 22
+   :header-rows: 1
+   
+   * - job_id
+     - param_type
+     - param_name
+     - param_value
+     - is_valid
+   * - 1
+     - 'column'
+     - 'column_1'
+     - 'src_recpt_id'
+     - 1
+   * - 1
+     - 'connection'
+     - 'connection_1'
+     - '2'
+     - 1
+   * - 1
+     - 'filter'
+     - 'filter_1'
+     - 'effective_to_date="9999-12-31"'
+     - 1
+   * - 1
+     - 'table'
+     - 'table_1'
+     - 'fdt.fdt_stock_sl_recpt'
+     - 1
+     
+:ref:`连接信息配置表` 配置：
+''''''''''''''''''''''''''''''
+
+.. list-table:: 
+   :widths: 5 5 5 5 5 60 5 5 5
+   :header-rows: 1
+
+
+   * - id
+     - user_name
+     - password
+     - database_type	
+     - server_desc
+     - server_name	
+     - port_number
+     - database_name
+     - is_valid
+   * - 2
+     - 'idas_etl'
+     - 'your-password'
+     - 'REDSHIFT'	
+     - 'IDAS'
+     - 'apcbigdata-prd-redshift-prd-beijing-a.caitnxyxi7ef.cn-north-1.redshift.amazonaws.com.cn'	
+     - 5439
+     - 'prd'
+     - 1
+
+
+
+其他校验任务脚本
+""""""""""""""""""
+*
+
+
+
+
+
+Python任务
+~~~~~~~~~~~~~
+
+``示例一：检验是否符合业务规则``
+""""""""""""""""""""""""""""""""
+
+该任务需要实现连接IDAS服务器的prd数据库和ACE服务器的amore数据库，并分别执行以下查询语句
+
+.. code-block:: sql
+
+    -- 查询1：连接IDAS
+    SELECT  SUM(txn_qty) qty, 
+            SUM(txn_amt) amt
+    FROM gdt.gdt_stk_sl_fct_stk_txn tx
+    WHERE shop_no=999998 AND tx.org_brand_id=1001 AND left(dim_date_id,6)=202104 AND txn_code=9 AND txn_direction=2 AND area_type=1;
+
+    -- 查询2：连接ACE
+    DECLARE @month VARCHAR(10)
+
+    SET @month='2021-04'
+    SELECT  SUM(count)*-1       AS qty,
+            SUM(price*count)*-1 AS amt
+    FROM 
+    (
+      SELECT  a.id, fromlogicid, logicstockname AS fromstockname
+      FROM  tock_t_stock_receipt a with(nolock)
+      INNER JOIN stock_t_logic_stock c with(nolock) ON a.fromlogicid=c.id
+      WHERE a.customerid=1001 AND receipttype=9 AND convert(varchar(7), submitdate,120)=@month AND a.fromlogicid=18 
+    )ar
+    INNER JOIN 
+    (
+      SELECT  a.id, convert(varchar(100),submitdate,112) AS saledate, e.dealerid, dealername, a.tologicid, c.logicstockname AS tostockname, manufacturercode, count, price
+      FROM stock_t_stock_receipt a
+      INNER JOIN stock_tr_stock_receipt_sku b with(nolock) ON a.id=b.receiptid
+      INNER JOIN stock_t_logic_stock c with(nolock) ON a.tologicid=c.id
+      INNER JOIN user_t_organization d with(nolock) ON d.id=a.fromorgid
+      INNER JOIN user_t_dealer e with(nolock) ON e.id=d.dealerid
+      INNER JOIN product_t_sku f with(nolock) ON b.skuid=f.id
+      INNER JOIN product_t_product g with(nolock) ON f.productid=g.id
+      WHERE a.customerid=1001 AND receipttype=9 AND convert(varchar(7), submitdate,120)=@month AND a.tologicid!=18 AND processnodestep='end' AND d.type=2  
+    )sr ON ar.id=sr.id;
+
+
+:ref:`校验任务表` 配置：
+''''''''''''''''''''''''''''''
+
+.. list-table:: 
+   :widths: 20 20 60
+   :header-rows: 1
+
+   * - 字段名称 (en)
+     - 字段名称
+     - 值
+   * - id
+     - 校验任务ID
+     - 8
+   * - job_name
+     - 校验任务名称
+     - 'bus_logic_gdt_stk_sl_fct_stk_txn'
+   * - job_desc
+     - 校验任务描述
+     - '校验业务逻辑是否正确'
+   * - group_id	
+     - 校验组ID
+     - 1
+   * - bus_module
+     - 业务板块
+     - 'stock'
+   * - job_type
+     - 校验任务类型
+     - 'python'
+   * - script_value
+     - 校验任务脚本
+     - 'check_two_db_template'
+   * - expected_result
+     - 预期结果
+     - '0'
+   * - is_valid
+     - 是否生效
+     - 1
+
+:ref:`参数表` 配置：
+''''''''''''''''''''''''''''''
+
+.. list-table:: 
+   :widths: 12 22 22 22 22
+   :header-rows: 1
+   
+   * - job_id
+     - param_type
+     - param_name
+     - param_value
+     - is_valid
+   * - 8
+     - 'connection'
+     - 'connection_1'
+     - '2'
+     - 1
+   * - 8
+     - 'connection'
+     - 'connection_2'
+     - '3'
+     - 1
+   * - 8
+     - 'script'
+     - 'script_1'
+     - *查询1脚本字符串*
+     - 1
+   * - 8
+     - 'script'
+     - 'script_2'
+     - *查询2脚本字符串*
+     - 1
+
+:ref:`连接信息配置表` 配置：
+''''''''''''''''''''''''''''''
+
+.. list-table:: 
+  :widths: 5 5 5 5 5 60 5 5 5
+  :header-rows: 1
+
+
+  * - id
+    - user_name
+    - password
+    - database_type	
+    - server_desc
+    - server_name	
+    - port_number
+    - database_name
+    - is_valid
+  * - 2
+    - 'idas_etl'
+    - 'your-password'
+    - 'REDSHIFT'	
+    - 'IDAS'
+    - 'apcbigdata-prd-redshift-prd-beijing-a.caitnxyxi7ef.cn-north-1.redshift.amazonaws.com.cn'	
+    - 5439
+    - 'prd'
+    - 1
+  * - 3
+    - 'MW_USER'
+    - 'your-password'
+    - 'MSSQL'	
+    - 'ACE'
+    - '172.19.121.198'	
+    - 1433
+    - 'amore'
+    - 1
+
+
+
+
+任务运行
+-----------------
+命令行运行
+~~~~~~~~~~~~~
+
+
+
+Cron定时任务
+~~~~~~~~~~~~~~
+
+
+
+邮件通知
+~~~~~~~~~~
+结束以后会自动发送整体运行情况邮件，通知所有任务执行情况和运行时长。
+执行日志：
+•
+Workflow Plan 每次运行结束后会在“执行批次记录表”里保存当前批次 Workflow Plan 的运行情况、运行时长等信息。
+•
+ETL 任务每次运行结束后会在“ ETL 任务执行记录表” 里保存当前批次中本任务的运行状态、运行时长等信息。

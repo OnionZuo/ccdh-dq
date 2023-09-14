@@ -1,0 +1,4 @@
+pandas~=1.2.4
+pyodbc~=4.0.30
+pytz~=2021.1
+redshift-connector~=2.0.881

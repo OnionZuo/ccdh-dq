@@ -1,0 +1,8 @@
+:py:mod:`pyscript` 模块
+=========================
+
+.. automodule:: pyscript
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :autosummary:

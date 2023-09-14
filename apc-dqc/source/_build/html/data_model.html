@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>数据模型 &mdash; DQC 1.0.0 文档</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="安装和部署" href="environment.html" />
+    <link rel="prev" title="DQC文档" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DQC
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">数据模型</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">校验任务表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">参数表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">校验组表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">连接信息配置表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">日志表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">历史日志表</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">安装和部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">配置和运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">开发参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">日志和调试</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DQC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>数据模型</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/data_model.rst.txt" rel="nofollow"> 查看页面源码</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>数据模型<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<a class="reference internal image-reference" href="_images/data_model.png"><img alt="data model" class="align-center" src="_images/data_model.png" style="width: 600px;" /></a>
+<div class="section" id="id2">
+<h2>校验任务表<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>用于存储校验任务的主要配置信息，包括任务所属校验组，任务脚本类型，任务脚本，和脚本运行预期结果等。</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段名称</p></th>
+<th class="head"><p>字段类型</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>int</p></td>
+<td><p>主键</p></td>
+</tr>
+<tr class="row-odd"><td><p>job_name</p></td>
+<td><p>nvarchar</p></td>
+<td><p>示例：<code class="docutils literal notranslate"><span class="pre">null_check_fdt_stock_sl_recpt</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>job_desc</p></td>
+<td><p>nvarchar</p></td>
+<td><p>示例：<code class="docutils literal notranslate"><span class="pre">非空检查</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>group_id</p></td>
+<td><p>int</p></td>
+<td><p>外键 (校验组表)</p></td>
+</tr>
+<tr class="row-even"><td><p>bus_module</p></td>
+<td><p>nvarchar</p></td>
+<td><p>示例：  <code class="docutils literal notranslate"><span class="pre">stock</span></code> | <code class="docutils literal notranslate"><span class="pre">order</span></code> | …</p></td>
+</tr>
+<tr class="row-odd"><td><p>job_type</p></td>
+<td><p>nvarchar</p></td>
+<td><p>值：<code class="docutils literal notranslate"><span class="pre">sql</span></code> | <code class="docutils literal notranslate"><span class="pre">python</span></code> | …</p></td>
+</tr>
+<tr class="row-even"><td><p>script_value</p></td>
+<td><p>nvarchar</p></td>
+<td><p>带参数SQL语句或Python函数名
+示例：<code class="docutils literal notranslate"><span class="pre">select</span> <span class="pre">count(1)</span> <span class="pre">from</span> <span class="pre">(select</span> <span class="pre">*</span> <span class="pre">from</span> <span class="pre">${table_1}</span> <span class="pre">where</span> <span class="pre">${filter_1})</span></code> | <code class="docutils literal notranslate"><span class="pre">check_two_db_template</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>expected_result</p></td>
+<td><p>nvarchar</p></td>
+<td><p>用于和脚本返回结果比对的值
+示例：<code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>is_valid</p></td>
+<td><p>int</p></td>
+<td><p>值：<code class="docutils literal notranslate"><span class="pre">0</span></code> | <code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>insert_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>update_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id3">
+<h2>参数表<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>用于存储校验任务运行所需参数，包括任务连接ID，任务脚本参数等。</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段名称</p></th>
+<th class="head"><p>字段类型</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>job_id</p></td>
+<td><p>int</p></td>
+<td><p>外键 (校验任务表)</p></td>
+</tr>
+<tr class="row-odd"><td><p>param_type</p></td>
+<td><p>nvarchar</p></td>
+<td><p>值：<code class="docutils literal notranslate"><span class="pre">column</span></code> | <code class="docutils literal notranslate"><span class="pre">connection</span></code> | <code class="docutils literal notranslate"><span class="pre">filter</span></code> | <code class="docutils literal notranslate"><span class="pre">table</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>param_name</p></td>
+<td><p>nvarchar</p></td>
+<td><p>对应校验任务表校验任务脚本中的参数
+示例：<code class="docutils literal notranslate"><span class="pre">column_1</span></code> | <code class="docutils literal notranslate"><span class="pre">connection_1</span></code> | <code class="docutils literal notranslate"><span class="pre">filter_1</span></code> | <code class="docutils literal notranslate"><span class="pre">table_1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>param_value</p></td>
+<td><p>nvarchar</p></td>
+<td><p>脚本参数值或校验任务连接id (param_type=connection)
+示例：<code class="docutils literal notranslate"><span class="pre">src_recpt_id</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">effective_to_date='9999-12-31'</span></code> | <code class="docutils literal notranslate"><span class="pre">fdt.fdt_stock_sl_recpt</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>is_valid</p></td>
+<td><p>int</p></td>
+<td><p>值：<code class="docutils literal notranslate"><span class="pre">0</span></code> | <code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>insert_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>update_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id4">
+<h2>校验组表<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>用于存储校验组信息，其中运行时间将用于生成定时运行配置文件，另外可以单独设置是否邮件通知运行结果。</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段名称</p></th>
+<th class="head"><p>字段类型</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>int</p></td>
+<td><p>主键</p></td>
+</tr>
+<tr class="row-odd"><td><p>group_name</p></td>
+<td><p>nvarchar</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>run_time</p></td>
+<td><p>nvarchar</p></td>
+<td><p>Cron时间表达式 (在线生成工具：<a class="reference external" href="http://www.cronmaker.com/">http://www.cronmaker.com/</a>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>is_notify</p></td>
+<td><p>int</p></td>
+<td><p>值：<code class="docutils literal notranslate"><span class="pre">0</span></code> | <code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>is_valid</p></td>
+<td><p>int</p></td>
+<td><p>值：<code class="docutils literal notranslate"><span class="pre">0</span></code> | <code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>insert_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>update_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id5">
+<h2>连接信息配置表<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>用于存储任务元数据库和任务脚本连接数据库的信息。</p>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>元数据库信息需要存为 <strong>id=1</strong></p>
+</div>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段名称</p></th>
+<th class="head"><p>字段类型</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>int</p></td>
+<td><p>主键 (对应参数表连接参数值)</p></td>
+</tr>
+<tr class="row-odd"><td><p>user_name</p></td>
+<td><p>nvarchar</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>password</p></td>
+<td><p>nvarchar</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>database_type</p></td>
+<td><p>nvarchar</p></td>
+<td><p>值：<code class="docutils literal notranslate"><span class="pre">MSSQL</span></code> | <code class="docutils literal notranslate"><span class="pre">REDSHIFT</span></code> | …</p></td>
+</tr>
+<tr class="row-even"><td><p>server_desc</p></td>
+<td><p>nvarchar</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>server_name</p></td>
+<td><p>nvarchar</p></td>
+<td><p>主机域名或IP地址</p></td>
+</tr>
+<tr class="row-even"><td><p>port_number</p></td>
+<td><p>int</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>database_name</p></td>
+<td><p>nvarchar</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>insert_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>update_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id6">
+<h2>日志表<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<p>用于存储当前批次任务的运行时间，状态，结果等。</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段名称</p></th>
+<th class="head"><p>字段类型</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>run_id</p></td>
+<td><p>nchar(14)</p></td>
+<td><p>主键，任务开始运行时间
+格式：<code class="docutils literal notranslate"><span class="pre">yyyymmddhhmmss</span></code>，示例：<code class="docutils literal notranslate"><span class="pre">202105311430</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>group_name</p></td>
+<td><p>nvarchar</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>job_id</p></td>
+<td><p>int</p></td>
+<td><p>对应执行该任务批次时校验任务表的任务ID</p></td>
+</tr>
+<tr class="row-odd"><td><p>job_name</p></td>
+<td><p>nvarchar</p></td>
+<td><p>值：对应校验任务表的任务名称</p></td>
+</tr>
+<tr class="row-even"><td><p>run_status</p></td>
+<td><p>nvarchar</p></td>
+<td><p>值：<code class="docutils literal notranslate"><span class="pre">READY</span></code> (准备运行) | <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code> (正在运行) | <code class="docutils literal notranslate"><span class="pre">FINISHED</span></code> (运行结束) | <code class="docutils literal notranslate"><span class="pre">FAILED</span></code> (运行错误)</p></td>
+</tr>
+<tr class="row-odd"><td><p>job_begin_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>job_end_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>sum_running_time</p></td>
+<td><p>numeric(10, 3)</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>check_result</p></td>
+<td><p>int</p></td>
+<td><p>脚本运行和预期比对结果
+值：<code class="docutils literal notranslate"><span class="pre">1</span></code> (一致) | <code class="docutils literal notranslate"><span class="pre">0</span></code> (不一致) | <code class="docutils literal notranslate"><span class="pre">-1</span></code> (任务运行错误)</p></td>
+</tr>
+<tr class="row-odd"><td><p>insert_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>update_time</p></td>
+<td><p>datetime</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id7">
+<h2>历史日志表<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<p>用于存储历史运行批次任务日志，每个新批次开始运行前脚本会自动将日志表中全部数据移入历史日志表。</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="environment.html" class="btn btn-neutral float-right" title="安装和部署" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="DQC文档" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; 版权所有 2021, Sharon Lau.
+
+    </p>
+  </div>
+    
+    
+    
+    利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

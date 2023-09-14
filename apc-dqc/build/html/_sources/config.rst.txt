@@ -1,0 +1,62 @@
+.. rst-class:: confmodule
+
+.. py:module:: config
+.. currentmodule:: config
+
+.. _`config-module`:
+
+:py:mod:`config` 模块
+==========================
+
+.. list-table::
+   :widths: 15 5 80
+   :header-rows: 1
+
+   * - 变量
+     - 类型
+     - 描述
+   * - :py:data:`DEVCONN`
+     - dict
+     - 元数据库的连接信息，同元数据库连接信息配置表ID=1的连接信息
+   * - :py:data:`EMAILCONFIG`
+     - dict
+     - 邮件通知配置，包括发件邮箱账号、密码、服务器端口，收件人等
+   * - :py:data:`EMAIL_FAIL`
+     - str
+     - 任务失败邮件模板，默认包含输出日志文件内容
+   * - :py:data:`EMAIL_SUCCESS`
+     - str
+     - 任务成功邮件模板，默认包含任务成功失败明细和输出日志文件内容
+   * - :py:data:`EMAIL_TMPL`
+     - str
+     - 通用邮件模板，可以使用CSS语言自定义格式
+   * - :py:data:`MASTERTBS`
+     - dict
+     - 元数据库的连接信息，即元数据库 :ref:`连接信息配置表` ID=1的连接信息
+   * - :py:data:`MASTERTBS`
+     - dict
+     - 元数据库的连接信息，即元数据库 :ref:`连接信息配置表` ID=1的连接信息
+   * - :py:data:`ODBCDRIVER`
+     - str
+     - 程序连接SQL Server使用的ODBC驱动，参见 :ref:`ODBC Driver for SQL Server`
+   * - :py:data:`TZ`
+     - str
+     - 程序输出日志中时间的时区，参见：`pytz <http://pytz.sourceforge.net/>`_
+
+
+
+.. py:data:: ODBCDRIVER
+   :value: 'ODBC Driver 13 for SQL Server'
+
+
+
+.. py:data:: DEVCONN
+   :type: dict
+
+   元数据库的连接信息，即元数据库 :ref:`连接信息配置表` ID=1的连接信息
+
+.. py:data:: EMAILCONFIG
+   :type: dict
+
+   邮件通知配置，包括发件邮箱账号、密码、服务器端口，收件人等
+

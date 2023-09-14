@@ -1,0 +1,6 @@
+ODBCDRIVER
+==========
+
+.. currentmodule:: dbconnect
+
+.. autodata:: ODBCDRIVER

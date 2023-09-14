@@ -1,0 +1,6 @@
+connect
+=======
+
+.. currentmodule:: dbconnect
+
+.. autofunction:: connect

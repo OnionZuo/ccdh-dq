@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>job &mdash; DQC 1.0.0 文档</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DQC
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">数据模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../environment.html">安装和部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment.html">配置和运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">开发参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debug.html">日志和调试</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DQC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">模块代码</a> &raquo;</li>
+        
+      <li>job</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>job 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">exception_logging</span>
+<span class="kn">import</span> <span class="nn">utils</span>
+<span class="kn">import</span> <span class="nn">pyscript</span>
+
+<span class="n">DEFAULT</span> <span class="o">=</span> <span class="s1">&#39;DEFAULT&#39;</span>
+<span class="n">NULL</span> <span class="o">=</span> <span class="s1">&#39;NULL&#39;</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="Job"><a class="viewcode-back" href="../job.html#job.Job">[文档]</a><span class="k">class</span> <span class="nc">Job</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; A class used to represent a checking job</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        run_id (int): 当前运行批次ID</span>
+<span class="sd">        job_detail (tuple): 校验任务信息</span>
+<span class="sd">        job_params (dict): 校验任务参数</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        id (int)</span>
+<span class="sd">        name (str)</span>
+<span class="sd">        desc (str)</span>
+<span class="sd">        job_type (str)</span>
+<span class="sd">        expected_result (str)</span>
+<span class="sd">        run_result (str): the value returned after executing the job script</span>
+<span class="sd">        check_result (int): indicator of whether the checking job passed</span>
+<span class="sd">        params (dict)</span>
+<span class="sd">        begin_time (str)</span>
+<span class="sd">        end_time (str)</span>
+<span class="sd">        log (str): string of values to initialize log table</span>
+<span class="sd">        script (str): script value with parameter values inserted (sql job) / function name (python job)</span>
+<span class="sd">        connid (str): connection id of the job  (sql job) / None (non-sql job)</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        run(dbs): run the job and assign run_result to the job instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">job_detail</span><span class="p">,</span> <span class="n">job_params</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">job_detail</span><span class="o">.</span><span class="n">job_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">job_detail</span><span class="o">.</span><span class="n">job_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="o">=</span> <span class="n">job_detail</span><span class="o">.</span><span class="n">job_desc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_type</span> <span class="o">=</span> <span class="n">job_detail</span><span class="o">.</span><span class="n">job_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expected_result</span> <span class="o">=</span> <span class="n">job_detail</span><span class="o">.</span><span class="n">expected_result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">job_params</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">begin_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;(</span><span class="si">{</span><span class="n">run_id</span><span class="si">!r}</span><span class="s1">, </span><span class="si">{</span><span class="n">job_detail</span><span class="o">.</span><span class="n">group_name</span><span class="si">!r}</span><span class="s1">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">!r}</span><span class="s1">, </span><span class="si">{</span><span class="n">job_detail</span><span class="o">.</span><span class="n">job_name</span><span class="si">!r}</span><span class="s1">, &#39;READY&#39;, </span>
+<span class="s1">            </span><span class="si">{</span><span class="n">NULL</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">NULL</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">NULL</span><span class="si">}</span><span class="s1">, 0, </span><span class="si">{</span><span class="n">DEFAULT</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">DEFAULT</span><span class="si">}</span><span class="s1">)&#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">script</span> <span class="o">=</span> <span class="n">job_detail</span><span class="o">.</span><span class="n">script_value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_type</span> <span class="o">==</span> <span class="s1">&#39;sql&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;connection_1&#39;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">script</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">script</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;${&#39;</span> <span class="o">+</span> <span class="n">param</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">param</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connid</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Job.run"><a class="viewcode-back" href="../job.html#job.Job.run">[文档]</a>    <span class="nd">@exception_logging</span><span class="p">(</span><span class="s1">&#39;RUNNING JOB SCRIPT&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; 执行当前校验任务的脚本</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dbs (list): 所有任务的数据库类实例</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[EXPECTED RESULT] </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">expected_result</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_type</span> <span class="o">==</span> <span class="s1">&#39;sql&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_result</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">execute_sql</span><span class="p">(</span><span class="n">dbs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">connid</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">script</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_type</span> <span class="o">==</span> <span class="s1">&#39;python&#39;</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">pyscript</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">script</span><span class="p">)(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbs</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; 版权所有 2021, Tingting Chen.
+
+    </p>
+  </div>
+    
+    
+    
+    利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

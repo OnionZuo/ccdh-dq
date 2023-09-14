@@ -1,0 +1,14 @@
+.. py:currentmodule:: dbconnect
+
+:py:mod:`dbconnect` 模块
+==========================
+
+
+
+.. automodule:: dbconnect
+   :members:
+   :undoc-members:
+   :autosummary:
+   :special-members: __init__
+
+

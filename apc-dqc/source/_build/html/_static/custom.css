@@ -1,0 +1,35 @@
+td{
+    white-space: pre-line !important;
+}
+
+.docutils{
+    white-space: pre-line !important;
+}
+
+td>p{
+    line-height: 1.5rem !important;
+}
+
+/* CSS for sphinx-prompt */
+
+.highlight >pre {
+    border: 1px solid #e1e4e5;
+    background: #f1f3f5;
+    overflow-x: auto;
+    padding: 12px 12px;
+  }
+  
+/* Tweak css for sphinx_prompt #5281 */
+.highlight >pre >span[class="prompt1"] {
+font-size: 12px;
+line-height: 1.4;
+}
+
+h4 >.docutils{
+    font-size: 90% !important;
+    font-family: Roboto Slab,ff-tisa-web-pro,Georgia,Arial,sans-serif;
+}
+
+.toctree-l4 > a >.docutils{
+    font-family: Roboto Slab,ff-tisa-web-pro,Georgia,Arial,sans-serif;
+}

@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>EMAILCONFIG &mdash; DQC 1.0.0 文档</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="EMAIL_FAIL" href="config.EMAIL_FAIL.html" />
+    <link rel="prev" title="DEVCONN" href="config.DEVCONN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DQC
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">数据模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../environment.html">安装和部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment.html">配置和运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debug.html">日志和调试</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../development.html">开发参考</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../run.html"><code class="docutils literal notranslate"><span class="pre">run.py</span></code></a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../config.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config</span></code> 模块</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../config.html#variables">Variables</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="config.DEVCONN.html">DEVCONN</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">EMAILCONFIG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.EMAIL_FAIL.html">EMAIL_FAIL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.EMAIL_SUCCESS.html">EMAIL_SUCCESS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.EMAIL_TMPL.html">EMAIL_TMPL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.MASTERTBS.html">MASTERTBS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.ODBCDRIVER.html">ODBCDRIVER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="config.TZ.html">TZ</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../dbconnect.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dbconnect</span></code> 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../job.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">job</span></code> 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyscript.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyscript</span></code> 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">utils</span></code> 模块</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DQC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../development.html">开发参考</a> &raquo;</li>
+        
+          <li><a href="../config.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config</span></code> 模块</a> &raquo;</li>
+        
+      <li>EMAILCONFIG</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/api/config.EMAILCONFIG.rst.txt" rel="nofollow"> 查看页面源码</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="emailconfig">
+<h1>EMAILCONFIG<a class="headerlink" href="#emailconfig" title="永久链接至标题">¶</a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="config.EMAILCONFIG">
+<span class="sig-name descname"><span class="pre">EMAILCONFIG</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'password':</span> <span class="pre">'idas202006',</span> <span class="pre">'recipient':</span> <span class="pre">['yingtong.liu&#64;bizfocus.cn',</span> <span class="pre">'vivian.chen&#64;bizfocus.cn'],</span> <span class="pre">'sender':</span> <span class="pre">'bdsupport&#64;cn.amorepacific.com',</span> <span class="pre">'smtp_host':</span> <span class="pre">'172.19.121.180',</span> <span class="pre">'smtp_port':</span> <span class="pre">25,</span> <span class="pre">'smtp_ssl':</span> <span class="pre">False}</span></em><a class="headerlink" href="#config.EMAILCONFIG" title="永久链接至目标">¶</a></dt>
+<dd><p>邮件通知配置，包括发件邮箱账号、密码、服务器端口，收件人等</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="config.EMAIL_FAIL.html" class="btn btn-neutral float-right" title="EMAIL_FAIL" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="config.DEVCONN.html" class="btn btn-neutral float-left" title="DEVCONN" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; 版权所有 2021, Tingting Chen.
+
+    </p>
+  </div>
+    
+    
+    
+    利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

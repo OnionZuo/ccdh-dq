@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>config 模块 &mdash; DQC 1.0.0 文档</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="dbconnect 模块" href="dbconnect.html" />
+    <link rel="prev" title="run.py" href="run.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DQC
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data_model.html">数据模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">安装和部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">配置和运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">日志和调试</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="development.html">开发参考</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run.html"><code class="docutils literal notranslate"><span class="pre">run.py</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config</span></code> 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dbconnect.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dbconnect</span></code> 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">job</span></code> 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscript.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyscript</span></code> 模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">utils</span></code> 模块</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DQC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="development.html">开发参考</a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">config</span></code> 模块</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/config.rst.txt" rel="nofollow"> 查看页面源码</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-config"></span><div class="confmodule section" id="config">
+<span id="config-module"></span><h1><a class="reference internal" href="#module-config" title="config"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config</span></code></a> 模块<a class="headerlink" href="#config" title="永久链接至标题">¶</a></h1>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 5%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>变量</p></th>
+<th class="head"><p>类型</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.DEVCONN" title="config.DEVCONN"><code class="xref py py-data docutils literal notranslate"><span class="pre">DEVCONN</span></code></a></p></td>
+<td><p>dict</p></td>
+<td><p>元数据库的连接信息，同元数据库连接信息配置表ID=1的连接信息</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.EMAILCONFIG" title="config.EMAILCONFIG"><code class="xref py py-data docutils literal notranslate"><span class="pre">EMAILCONFIG</span></code></a></p></td>
+<td><p>dict</p></td>
+<td><p>邮件通知配置，包括发件邮箱账号、密码、服务器端口，收件人等</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/config.EMAIL_FAIL.html#config.EMAIL_FAIL" title="config.EMAIL_FAIL"><code class="xref py py-data docutils literal notranslate"><span class="pre">EMAIL_FAIL</span></code></a></p></td>
+<td><p>str</p></td>
+<td><p>任务失败邮件模板，默认包含输出日志文件内容</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/config.EMAIL_SUCCESS.html#config.EMAIL_SUCCESS" title="config.EMAIL_SUCCESS"><code class="xref py py-data docutils literal notranslate"><span class="pre">EMAIL_SUCCESS</span></code></a></p></td>
+<td><p>str</p></td>
+<td><p>任务成功邮件模板，默认包含任务成功失败明细和输出日志文件内容</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/config.EMAIL_TMPL.html#config.EMAIL_TMPL" title="config.EMAIL_TMPL"><code class="xref py py-data docutils literal notranslate"><span class="pre">EMAIL_TMPL</span></code></a></p></td>
+<td><p>str</p></td>
+<td><p>通用邮件模板，可以使用CSS语言自定义格式</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-data docutils literal notranslate"><span class="pre">MASTERTBS</span></code></p></td>
+<td><p>dict</p></td>
+<td><p>元数据库的连接信息，即元数据库 <a class="reference internal" href="data_model.html#id5"><span class="std std-ref">连接信息配置表</span></a> ID=1的连接信息</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-data docutils literal notranslate"><span class="pre">MASTERTBS</span></code></p></td>
+<td><p>dict</p></td>
+<td><p>元数据库的连接信息，即元数据库 <a class="reference internal" href="data_model.html#id5"><span class="std std-ref">连接信息配置表</span></a> ID=1的连接信息</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.ODBCDRIVER" title="config.ODBCDRIVER"><code class="xref py py-data docutils literal notranslate"><span class="pre">ODBCDRIVER</span></code></a></p></td>
+<td><p>str</p></td>
+<td><p>程序连接SQL Server使用的ODBC驱动，参见 <a class="reference internal" href="environment.html#odbc-driver-for-sql-server"><span class="std std-ref">ODBC Driver for SQL Server</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-data docutils literal notranslate"><span class="pre">TZ</span></code></p></td>
+<td><p>str</p></td>
+<td><p>程序输出日志中时间的时区，参见：<a class="reference external" href="http://pytz.sourceforge.net/">pytz</a></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="config.ODBCDRIVER">
+<span class="sig-name descname"><span class="pre">ODBCDRIVER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'ODBC</span> <span class="pre">Driver</span> <span class="pre">13</span> <span class="pre">for</span> <span class="pre">SQL</span> <span class="pre">Server'</span></em><a class="headerlink" href="#config.ODBCDRIVER" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="config.DEVCONN">
+<span class="sig-name descname"><span class="pre">DEVCONN</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(在 Python v3.9)"><span class="pre">dict</span></a></em><a class="headerlink" href="#config.DEVCONN" title="永久链接至目标">¶</a></dt>
+<dd><p>元数据库的连接信息，即元数据库 <a class="reference internal" href="data_model.html#id5"><span class="std std-ref">连接信息配置表</span></a> ID=1的连接信息</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="config.EMAILCONFIG">
+<span class="sig-name descname"><span class="pre">EMAILCONFIG</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(在 Python v3.9)"><span class="pre">dict</span></a></em><a class="headerlink" href="#config.EMAILCONFIG" title="永久链接至目标">¶</a></dt>
+<dd><p>邮件通知配置，包括发件邮箱账号、密码、服务器端口，收件人等</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="dbconnect.html" class="btn btn-neutral float-right" title="dbconnect 模块" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="run.html" class="btn btn-neutral float-left" title="run.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; 版权所有 2021, Tingting Chen.
+
+    </p>
+  </div>
+    
+    
+    
+    利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

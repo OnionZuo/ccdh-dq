@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>安装和部署 &mdash; DQC 1.0.0 文档</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="配置和运行" href="deployment.html" />
+    <link rel="prev" title="数据模型" href="data_model.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DQC
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data_model.html">数据模型</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">安装和部署</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#python3-pipvenv">Python3, pip和venv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#odbc-driver-for-sql-server">ODBC Driver for SQL Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python">Python包</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">配置和运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">日志和调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">开发参考</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DQC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>安装和部署</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/environment.rst.txt" rel="nofollow"> 查看页面源码</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="nonmodule section" id="id1">
+<h1>安装和部署<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>DQC程序由Python语言编写，在不同系统上均可以运行。以下指南为环境中部署和运行DQC程序提供参照。</p>
+<div class="section" id="python3-pipvenv">
+<h2>Python3, pip和venv<a class="headerlink" href="#python3-pipvenv" title="永久链接至标题">¶</a></h2>
+<p>首先，需要安装Python3和pip并使用venv创建虚拟环境。</p>
+<div class="admonition seealso">
+<p class="admonition-title">参见</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://python.org">python.org</a></p></li>
+<li><p><a class="reference external" href="https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/">Installing packages using pip and virtual environments — Python Packaging User Guide</a></p></li>
+</ul>
+</div>
+<p>例如，在Amazon Linux 2环境下可以执行以下命令：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><style type="text/css">
+span.prompt1:before {
+  content: "$ ";
+}
+</style><span class="prompt1">python --version                             <span class="c1"># 查看Python3是否安装</span></span>
+<span class="prompt1">sudo yum install python3                     <span class="c1"># 安装Python3</span></span>
+<span class="prompt1">python3 -m pip --version                     <span class="c1"># 查看pip是否安装</span></span>
+<span class="prompt1">python3 -m pip install --user --upgrade pip  <span class="c1"># 安装pip</span></span>
+<span class="prompt1">mkdir dqc                                    <span class="c1"># 创建项目目录</span></span>
+<span class="prompt1">python3 -m venv dqc                          <span class="c1"># 在项目目录下创建虚拟环境</span></span>
+</pre></div></div></div>
+<div class="section" id="odbc-driver-for-sql-server">
+<h2>ODBC Driver for SQL Server<a class="headerlink" href="#odbc-driver-for-sql-server" title="永久链接至标题">¶</a></h2>
+<p>另外，需要安装Microsoft ODBC驱动以连接SQL Server数据库。</p>
+<div class="admonition seealso">
+<p class="admonition-title">参见</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.microsoft.com/zh-cn/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server">安装 Microsoft ODBC Driver for SQL Server (Linux)</a></p></li>
+</ul>
+</div>
+<p>例如，在Red Hat Enterprise Server 7环境安装ODBC 13可以执行以下命令：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">sudo su</span>
+<span class="prompt1">curl https://packages.microsoft.com/config/rhel/7/prod.repo &gt; /etc/yum.repos.d/mssql-release.repo</span>
+<span class="prompt1"><span class="nb">exit</span></span>
+<span class="prompt1">sudo yum update</span>
+<span class="prompt1">sudo yum remove unixODBC <span class="c1">#to avoid conflicts</span></span>
+<span class="prompt1">sudo <span class="nv">ACCEPT_EULA</span><span class="o">=</span>Y yum install msodbcsql-13.0.1.0-1 mssql-tools-14.0.2.0-1</span>
+<span class="prompt1">sudo yum install unixODBC-utf16-devel</span>
+<span class="prompt1">ln -sfn /opt/mssql-tools/bin/sqlcmd-13.0.1.0 /usr/bin/sqlcmd</span>
+<span class="prompt1">ln -sfn /opt/mssql-tools/bin/bcp-13.0.1.0 /usr/bin/bcp</span>
+</pre></div></div></div>
+<div class="section" id="python">
+<h2>Python包<a class="headerlink" href="#python" title="永久链接至标题">¶</a></h2>
+<p>最后，安装DQC程序运行需要的Python包。</p>
+<ul class="mylist simple">
+<li><p><a class="reference external" href="https://pypi.org/project/pandas/">Pandas</a>: 用于将元数据库查询结果存为DataFrame</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/redshift-connector/">redshift-connector</a>: 用于连接Redshift数据库</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pyodbc/">pyodbc</a>: 用于连接SQL Server数据库</p></li>
+</ul>
+<p>先激活项目虚拟环境：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="nb">source</span> dqc/bin/activate</span>
+</pre></div></div><p>之后使用以下命令安装：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python3 -m pip install -r requirements.txt  <span class="c1"># 全部安装</span></span>
+<span class="prompt1">python3 -m pip install pandas <span class="c1"># 单独安装</span></span>
+</pre></div></div><div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>如果pyodbc包安装遇到问题，可参考以下网页：</p>
+<ul class="mylist simple">
+<li><p><a class="reference external" href="https://stackoverflow.com/questions/2960339/unable-to-install-pyodbc-on-linux">Unable to install pyodbc on Linux — Stack Overflow</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="deployment.html" class="btn btn-neutral float-right" title="配置和运行" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="data_model.html" class="btn btn-neutral float-left" title="数据模型" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; 版权所有 2021, Tingting Chen.
+
+    </p>
+  </div>
+    
+    
+    
+    利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

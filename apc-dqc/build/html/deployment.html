@@ -1,0 +1,731 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>配置和运行 &mdash; DQC 1.0.0 文档</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/tabs.js"></script>
+        <script src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="日志和调试" href="debug.html" />
+    <link rel="prev" title="安装和部署" href="environment.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DQC
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data_model.html">数据模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">安装和部署</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">配置和运行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id3">配置</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">通用配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">任务配置</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sql">SQL任务</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python">Python任务</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">程序运行</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id9">命令行运行</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cron">Cron定时任务</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">日志和调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">开发参考</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DQC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>配置和运行</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/deployment.rst.txt" rel="nofollow"> 查看页面源码</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="nonmodule section" id="id1">
+<h1>配置和运行<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<div class="contents local topic" id="id2">
+<ul class="simple">
+<li><p><a class="reference internal" href="#id3" id="id10">配置</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id4" id="id11">通用配置</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id12">任务配置</a></p>
+<ul>
+<li><p><a class="reference internal" href="#sql" id="id13">SQL任务</a></p></li>
+<li><p><a class="reference internal" href="#python" id="id14">Python任务</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#id8" id="id15">程序运行</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id9" id="id16">命令行运行</a></p></li>
+<li><p><a class="reference internal" href="#cron" id="id17">Cron定时任务</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2><a class="toc-backref" href="#id10">配置</a><a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>为了使用DQC脚本自动执行校验任务，需要在元数据库和项目脚本进行配置，以下提供配置示例。</p>
+<div class="section" id="id4">
+<h3><a class="toc-backref" href="#id11">通用配置</a><a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">元数据库</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">校验组表</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">其他</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>将元数据连接信息以id=1存储在 <a class="reference internal" href="data_model.html#id5"><span class="std std-ref">连接信息配置表</span></a>：</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 60%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>user_name</p></th>
+<th class="head"><p>password</p></th>
+<th class="head"><p>database_type</p></th>
+<th class="head"><p>server_desc</p></th>
+<th class="head"><p>server_name</p></th>
+<th class="head"><p>port_number</p></th>
+<th class="head"><p>database_name</p></th>
+<th class="head"><p>is_valid</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>‘bigdataprddb’</p></td>
+<td><p>‘your-password’</p></td>
+<td><p>‘MSSQL’</p></td>
+<td><p>‘Portal’</p></td>
+<td><p>‘bigdata-prd-db-sqlsever-rds-beijing.cudupqbpop8x.rds.cn-north-1.amazonaws.com.cn’</p></td>
+<td><p>1433</p></td>
+<td><p>‘idas’</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>在 <a class="reference internal" href="data_model.html#id4"><span class="std std-ref">校验组表</span></a> 配置校验组信息：</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>group_name</p></th>
+<th class="head"><p>run_time</p></th>
+<th class="head"><p>is_notify</p></th>
+<th class="head"><p>is_valid</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>‘Daily_check’</p></td>
+<td><p>‘10 0 * * *’</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p>Python脚本 <code class="docutils literal notranslate"><span class="pre">config.py</span></code> 中另外需要对一些变量进行配置，具体请参照 <a class="reference internal" href="config.html#config-module"><span class="std std-ref">config 模块</span></a>。</p>
+</div></div>
+</div>
+<div class="section" id="id5">
+<h3><a class="toc-backref" href="#id12">任务配置</a><a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>当前支持的任务类型包括SQL任务和Python任务，以下为不同类型校验任务示例</p>
+<div class="section" id="sql">
+<h4><a class="toc-backref" href="#id13">SQL任务</a><a class="headerlink" href="#sql" title="永久链接至标题">¶</a></h4>
+<div class="section" id="id6">
+<h5><code class="docutils literal notranslate"><span class="pre">示例一：检验是否主键唯一</span></code><a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h5>
+<p>该任务需要实现连接IDAS服务器的prd数据库并执行以下查询语句</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>  <span class="k">COUNT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">FROM</span>
+<span class="p">(</span>
+    <span class="k">SELECT</span>  <span class="n">src_recpt_id</span>
+    <span class="k">FROM</span> <span class="n">fdt</span><span class="p">.</span><span class="n">fdt_stock_sl_recpt</span>
+    <span class="k">WHERE</span> <span class="n">effective_to_date</span><span class="o">=</span><span class="s1">&#39;9999-12-31&#39;</span>
+    <span class="k">GROUP</span> <span class="k">BY</span>  <span class="n">src_recpt_id</span>
+    <span class="k">HAVING</span> <span class="k">COUNT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>任务配置如下：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">校验任务表</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">参数表</button><button aria-controls="panel-1-1-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-2" name="1-2" role="tab" tabindex="-1">连接信息配置表</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段名称 (en)</p></th>
+<th class="head"><p>字段名称</p></th>
+<th class="head"><p>值</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>校验任务ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>job_name</p></td>
+<td><p>校验任务名称</p></td>
+<td><p>‘unique_primary_key_fdt_stock_sl_recpt’</p></td>
+</tr>
+<tr class="row-even"><td><p>job_desc</p></td>
+<td><p>校验任务描述</p></td>
+<td><p>‘校验主键是否唯一’</p></td>
+</tr>
+<tr class="row-odd"><td><p>group_id</p></td>
+<td><p>校验组ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>bus_module</p></td>
+<td><p>业务板块</p></td>
+<td><p>‘stock’</p></td>
+</tr>
+<tr class="row-odd"><td><p>job_type</p></td>
+<td><p>校验任务类型</p></td>
+<td><p>‘sql’</p></td>
+</tr>
+<tr class="row-even"><td><p>script_value</p></td>
+<td><p>校验任务脚本</p></td>
+<td><p>‘select count(1) from(select ${column_1} from ${table_1} where $filter_1} group by ${column_1} having count(1)&gt;1’</p></td>
+</tr>
+<tr class="row-odd"><td><p>expected_result</p></td>
+<td><p>预期结果</p></td>
+<td><p>‘0’</p></td>
+</tr>
+<tr class="row-even"><td><p>is_valid</p></td>
+<td><p>是否生效</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>job_id</p></th>
+<th class="head"><p>param_type</p></th>
+<th class="head"><p>param_name</p></th>
+<th class="head"><p>param_value</p></th>
+<th class="head"><p>is_valid</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>‘column’</p></td>
+<td><p>‘column_1’</p></td>
+<td><p>‘src_recpt_id’</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>‘connection’</p></td>
+<td><p>‘connection_1’</p></td>
+<td><p>‘2’</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>‘filter’</p></td>
+<td><p>‘filter_1’</p></td>
+<td><p>‘effective_to_date=”9999-12-31”’</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>‘table’</p></td>
+<td><p>‘table_1’</p></td>
+<td><p>‘fdt.fdt_stock_sl_recpt’</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div><div aria-labelledby="tab-1-1-2" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-2" name="1-2" role="tabpanel" tabindex="0"><table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 60%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>user_name</p></th>
+<th class="head"><p>password</p></th>
+<th class="head"><p>database_type</p></th>
+<th class="head"><p>server_desc</p></th>
+<th class="head"><p>server_name</p></th>
+<th class="head"><p>port_number</p></th>
+<th class="head"><p>database_name</p></th>
+<th class="head"><p>is_valid</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>‘idas_etl’</p></td>
+<td><p>‘your-password’</p></td>
+<td><p>‘REDSHIFT’</p></td>
+<td><p>‘IDAS’</p></td>
+<td><p>‘apcbigdata-prd-redshift-prd-beijing-a.caitnxyxi7ef.cn-north-1.redshift.amazonaws.com.cn’</p></td>
+<td><p>5439</p></td>
+<td><p>‘prd’</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="admonition seealso">
+<p class="admonition-title">参见</p>
+<p><a class="reference internal" href="data_model.html#data-model"><span class="std std-ref">数据模型</span></a> : <a class="reference internal" href="data_model.html#id2"><span class="std std-ref">校验任务表</span></a>，<a class="reference internal" href="data_model.html#id3"><span class="std std-ref">参数表</span></a>，<a class="reference internal" href="data_model.html#id5"><span class="std std-ref">连接信息配置表</span></a></p>
+</div>
+</div>
+</div>
+<div class="section" id="python">
+<h4><a class="toc-backref" href="#id14">Python任务</a><a class="headerlink" href="#python" title="永久链接至标题">¶</a></h4>
+<div class="section" id="id7">
+<h5><code class="docutils literal notranslate"><span class="pre">示例一：检验是否符合业务规则</span></code><a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h5>
+<p>该任务需要实现连接IDAS服务器的prd数据库和ACE服务器的amore数据库，并分别执行以下查询语句</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- 查询1：连接IDAS</span>
+<span class="k">SELECT</span>  <span class="k">SUM</span><span class="p">(</span><span class="n">txn_qty</span><span class="p">)</span> <span class="n">qty</span><span class="p">,</span>
+        <span class="k">SUM</span><span class="p">(</span><span class="n">txn_amt</span><span class="p">)</span> <span class="n">amt</span>
+<span class="k">FROM</span> <span class="n">gdt</span><span class="p">.</span><span class="n">gdt_stk_sl_fct_stk_txn</span> <span class="n">tx</span>
+<span class="k">WHERE</span> <span class="n">shop_no</span><span class="o">=</span><span class="mi">999998</span> <span class="k">AND</span> <span class="n">tx</span><span class="p">.</span><span class="n">org_brand_id</span><span class="o">=</span><span class="mi">1001</span> <span class="k">AND</span> <span class="k">left</span><span class="p">(</span><span class="n">dim_date_id</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="o">=</span><span class="mi">202104</span> <span class="k">AND</span> <span class="n">txn_code</span><span class="o">=</span><span class="mi">9</span> <span class="k">AND</span> <span class="n">txn_direction</span><span class="o">=</span><span class="mi">2</span> <span class="k">AND</span> <span class="n">area_type</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="c1">-- 查询2：连接ACE</span>
+<span class="k">DECLARE</span> <span class="o">@</span><span class="k">month</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="k">SET</span> <span class="o">@</span><span class="k">month</span><span class="o">=</span><span class="s1">&#39;2021-04&#39;</span>
+<span class="k">SELECT</span>  <span class="k">SUM</span><span class="p">(</span><span class="k">count</span><span class="p">)</span><span class="o">*-</span><span class="mi">1</span>       <span class="k">AS</span> <span class="n">qty</span><span class="p">,</span>
+        <span class="k">SUM</span><span class="p">(</span><span class="n">price</span><span class="o">*</span><span class="k">count</span><span class="p">)</span><span class="o">*-</span><span class="mi">1</span> <span class="k">AS</span> <span class="n">amt</span>
+<span class="k">FROM</span>
+<span class="p">(</span>
+  <span class="k">SELECT</span>  <span class="n">a</span><span class="p">.</span><span class="n">id</span><span class="p">,</span> <span class="n">fromlogicid</span><span class="p">,</span> <span class="n">logicstockname</span> <span class="k">AS</span> <span class="n">fromstockname</span>
+  <span class="k">FROM</span>  <span class="n">tock_t_stock_receipt</span> <span class="n">a</span> <span class="k">with</span><span class="p">(</span><span class="n">nolock</span><span class="p">)</span>
+  <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">stock_t_logic_stock</span> <span class="k">c</span> <span class="k">with</span><span class="p">(</span><span class="n">nolock</span><span class="p">)</span> <span class="k">ON</span> <span class="n">a</span><span class="p">.</span><span class="n">fromlogicid</span><span class="o">=</span><span class="k">c</span><span class="p">.</span><span class="n">id</span>
+  <span class="k">WHERE</span> <span class="n">a</span><span class="p">.</span><span class="n">customerid</span><span class="o">=</span><span class="mi">1001</span> <span class="k">AND</span> <span class="n">receipttype</span><span class="o">=</span><span class="mi">9</span> <span class="k">AND</span> <span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span> <span class="n">submitdate</span><span class="p">,</span><span class="mi">120</span><span class="p">)</span><span class="o">=@</span><span class="k">month</span> <span class="k">AND</span> <span class="n">a</span><span class="p">.</span><span class="n">fromlogicid</span><span class="o">=</span><span class="mi">18</span>
+<span class="p">)</span><span class="n">ar</span>
+<span class="k">INNER</span> <span class="k">JOIN</span>
+<span class="p">(</span>
+  <span class="k">SELECT</span>  <span class="n">a</span><span class="p">.</span><span class="n">id</span><span class="p">,</span> <span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span><span class="n">submitdate</span><span class="p">,</span><span class="mi">112</span><span class="p">)</span> <span class="k">AS</span> <span class="n">saledate</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="n">dealerid</span><span class="p">,</span> <span class="n">dealername</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">tologicid</span><span class="p">,</span> <span class="k">c</span><span class="p">.</span><span class="n">logicstockname</span> <span class="k">AS</span> <span class="n">tostockname</span><span class="p">,</span> <span class="n">manufacturercode</span><span class="p">,</span> <span class="k">count</span><span class="p">,</span> <span class="n">price</span>
+  <span class="k">FROM</span> <span class="n">stock_t_stock_receipt</span> <span class="n">a</span>
+  <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">stock_tr_stock_receipt_sku</span> <span class="n">b</span> <span class="k">with</span><span class="p">(</span><span class="n">nolock</span><span class="p">)</span> <span class="k">ON</span> <span class="n">a</span><span class="p">.</span><span class="n">id</span><span class="o">=</span><span class="n">b</span><span class="p">.</span><span class="n">receiptid</span>
+  <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">stock_t_logic_stock</span> <span class="k">c</span> <span class="k">with</span><span class="p">(</span><span class="n">nolock</span><span class="p">)</span> <span class="k">ON</span> <span class="n">a</span><span class="p">.</span><span class="n">tologicid</span><span class="o">=</span><span class="k">c</span><span class="p">.</span><span class="n">id</span>
+  <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">user_t_organization</span> <span class="n">d</span> <span class="k">with</span><span class="p">(</span><span class="n">nolock</span><span class="p">)</span> <span class="k">ON</span> <span class="n">d</span><span class="p">.</span><span class="n">id</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">fromorgid</span>
+  <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">user_t_dealer</span> <span class="n">e</span> <span class="k">with</span><span class="p">(</span><span class="n">nolock</span><span class="p">)</span> <span class="k">ON</span> <span class="n">e</span><span class="p">.</span><span class="n">id</span><span class="o">=</span><span class="n">d</span><span class="p">.</span><span class="n">dealerid</span>
+  <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">product_t_sku</span> <span class="n">f</span> <span class="k">with</span><span class="p">(</span><span class="n">nolock</span><span class="p">)</span> <span class="k">ON</span> <span class="n">b</span><span class="p">.</span><span class="n">skuid</span><span class="o">=</span><span class="n">f</span><span class="p">.</span><span class="n">id</span>
+  <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">product_t_product</span> <span class="k">g</span> <span class="k">with</span><span class="p">(</span><span class="n">nolock</span><span class="p">)</span> <span class="k">ON</span> <span class="n">f</span><span class="p">.</span><span class="n">productid</span><span class="o">=</span><span class="k">g</span><span class="p">.</span><span class="n">id</span>
+  <span class="k">WHERE</span> <span class="n">a</span><span class="p">.</span><span class="n">customerid</span><span class="o">=</span><span class="mi">1001</span> <span class="k">AND</span> <span class="n">receipttype</span><span class="o">=</span><span class="mi">9</span> <span class="k">AND</span> <span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span> <span class="n">submitdate</span><span class="p">,</span><span class="mi">120</span><span class="p">)</span><span class="o">=@</span><span class="k">month</span> <span class="k">AND</span> <span class="n">a</span><span class="p">.</span><span class="n">tologicid</span><span class="o">!=</span><span class="mi">18</span> <span class="k">AND</span> <span class="n">processnodestep</span><span class="o">=</span><span class="s1">&#39;end&#39;</span> <span class="k">AND</span> <span class="n">d</span><span class="p">.</span><span class="k">type</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span><span class="n">sr</span> <span class="k">ON</span> <span class="n">ar</span><span class="p">.</span><span class="n">id</span><span class="o">=</span><span class="n">sr</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>任务配置如下：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">Python脚本</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">校验任务表</button><button aria-controls="panel-2-2-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-2" name="2-2" role="tab" tabindex="-1">参数表</button><button aria-controls="panel-2-2-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-3" name="2-3" role="tab" tabindex="-1">连接信息配置表</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p>对于Python任务，需要在 <a class="reference internal" href="pyscript.html#pyscript"><span class="std std-ref">pyscript 模块</span></a> 里将任务脚本定义为函数，函数名即之后配置在校验任务表内的校验任务脚本值，该任务脚本如下：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">check_two_db_template</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">dbs</span><span class="p">):</span>
+    <span class="n">db_1</span> <span class="o">=</span> <span class="n">dbs</span><span class="p">[</span><span class="n">job</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;connection_1&#39;</span><span class="p">]]</span>
+    <span class="n">db_2</span> <span class="o">=</span> <span class="n">dbs</span><span class="p">[</span><span class="n">job</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;connection_2&#39;</span><span class="p">]]</span>
+    <span class="n">script_1</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;script_1&#39;</span><span class="p">]</span>
+    <span class="n">script_2</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;script_2&#39;</span><span class="p">]</span>
+    <span class="n">run_results</span> <span class="o">=</span> <span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">execute_sql</span><span class="p">(</span><span class="n">db_1</span><span class="p">,</span> <span class="n">script_1</span><span class="p">,</span> <span class="s1">&#39;many&#39;</span><span class="p">),</span><span class="n">utils</span><span class="o">.</span><span class="n">execute_sql</span><span class="p">(</span><span class="n">db_2</span><span class="p">,</span> <span class="n">script_2</span><span class="p">,</span> <span class="s1">&#39;many&#39;</span><span class="p">))</span>
+    <span class="n">job</span><span class="o">.</span><span class="n">run_result</span>  <span class="o">=</span>  <span class="nb">sum</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span><span class="p">,</span> <span class="n">run_results</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">run_results</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span> <span class="c1"># 用于和任务预期结果比对的值</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段名称 (en)</p></th>
+<th class="head"><p>字段名称</p></th>
+<th class="head"><p>值</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>校验任务ID</p></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-odd"><td><p>job_name</p></td>
+<td><p>校验任务名称</p></td>
+<td><p>‘bus_logic_gdt_stk_sl_fct_stk_txn’</p></td>
+</tr>
+<tr class="row-even"><td><p>job_desc</p></td>
+<td><p>校验任务描述</p></td>
+<td><p>‘校验业务逻辑是否正确’</p></td>
+</tr>
+<tr class="row-odd"><td><p>group_id</p></td>
+<td><p>校验组ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>bus_module</p></td>
+<td><p>业务板块</p></td>
+<td><p>‘stock’</p></td>
+</tr>
+<tr class="row-odd"><td><p>job_type</p></td>
+<td><p>校验任务类型</p></td>
+<td><p>‘python’</p></td>
+</tr>
+<tr class="row-even"><td><p>script_value</p></td>
+<td><p>校验任务脚本</p></td>
+<td><p>‘check_two_db_template’</p></td>
+</tr>
+<tr class="row-odd"><td><p>expected_result</p></td>
+<td><p>预期结果</p></td>
+<td><p>‘0’</p></td>
+</tr>
+<tr class="row-even"><td><p>is_valid</p></td>
+<td><p>是否生效</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div><div aria-labelledby="tab-2-2-2" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-2" name="2-2" role="tabpanel" tabindex="0"><table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>job_id</p></th>
+<th class="head"><p>param_type</p></th>
+<th class="head"><p>param_name</p></th>
+<th class="head"><p>param_value</p></th>
+<th class="head"><p>is_valid</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>‘connection’</p></td>
+<td><p>‘connection_1’</p></td>
+<td><p>‘2’</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>‘connection’</p></td>
+<td><p>‘connection_2’</p></td>
+<td><p>‘3’</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>‘script’</p></td>
+<td><p>‘script_1’</p></td>
+<td><p><em>查询1脚本字符串</em></p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>‘script’</p></td>
+<td><p>‘script_2’</p></td>
+<td><p><em>查询2脚本字符串</em></p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div><div aria-labelledby="tab-2-2-3" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-3" name="2-3" role="tabpanel" tabindex="0"><table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 60%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>user_name</p></th>
+<th class="head"><p>password</p></th>
+<th class="head"><p>database_type</p></th>
+<th class="head"><p>server_desc</p></th>
+<th class="head"><p>server_name</p></th>
+<th class="head"><p>port_number</p></th>
+<th class="head"><p>database_name</p></th>
+<th class="head"><p>is_valid</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>‘idas_etl’</p></td>
+<td><p>‘your-password’</p></td>
+<td><p>‘REDSHIFT’</p></td>
+<td><p>‘IDAS’</p></td>
+<td><p>‘apcbigdata-prd-redshift-prd-beijing-a.caitnxyxi7ef.cn-north-1.redshift.amazonaws.com.cn’</p></td>
+<td><p>5439</p></td>
+<td><p>‘prd’</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>‘MW_USER’</p></td>
+<td><p>‘your-password’</p></td>
+<td><p>‘MSSQL’</p></td>
+<td><p>‘ACE’</p></td>
+<td><p>‘172.19.121.198’</p></td>
+<td><p>1433</p></td>
+<td><p>‘amore’</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>同一类型的不同Python任务可以共用一个脚本。</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">参见</p>
+<p><a class="reference internal" href="data_model.html#data-model"><span class="std std-ref">数据模型</span></a> &gt; <a class="reference internal" href="data_model.html#id2"><span class="std std-ref">校验任务表</span></a>，<a class="reference internal" href="data_model.html#id3"><span class="std std-ref">参数表</span></a>，<a class="reference internal" href="data_model.html#id5"><span class="std std-ref">连接信息配置表</span></a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id8">
+<h2><a class="toc-backref" href="#id15">程序运行</a><a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
+<p>目前DQC程序将顺序执行在元数据库中配置的任务，支持命令行参数指定校验组。</p>
+<div class="section" id="id9">
+<h3><a class="toc-backref" href="#id16">命令行运行</a><a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h3>
+<p>按照 <a class="reference internal" href="environment.html#id1"><span class="std std-ref">安装和部署</span></a> 准备好环境后，可使用以下命令运行程序：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><style type="text/css">
+span.prompt1:before {
+  content: "$ ";
+}
+</style><span class="prompt1"><span class="nb">source</span> dqc/bin/activate  <span class="c1"># 激活项目虚拟环境</span></span>
+<span class="prompt1">python3 run.py           <span class="c1"># 不指定校验组</span></span>
+<span class="prompt1">python3 -groupid <span class="m">1</span>       <span class="c1"># 指定校验组，该命令将运行校验组id=1的任务</span></span>
+</pre></div></div></div>
+<div class="section" id="cron">
+<h3><a class="toc-backref" href="#id17">Cron定时任务</a><a class="headerlink" href="#cron" title="永久链接至标题">¶</a></h3>
+<p>为了让程序定期自动执行，可以在linux上使用crontab指令使系统自动在指定的时间执行命令。</p>
+<div class="admonition seealso">
+<p class="admonition-title">参见</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.oracle.com/cd/E38902_01/html/819-6951/sysrescron-18108.html">调度系统任务（任务）— Oracle系统管理指南</a></p></li>
+<li><p><a class="reference external" href="https://www.tutorialspoint.com/unix_commands/crontab.htm">crontab - Unix, Linux Command — Tutorialspoint</a></p></li>
+</ul>
+</div>
+<p>以下为命令示例：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">crontab -e <span class="c1"># 为当前用户创建crontab文件</span></span>
+</pre></div></div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># 在 crontab 文件内</span>
+<span class="mi">10</span> <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>  <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">dqc</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">dqcdev</span><span class="o">/</span><span class="n">run</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">groupid</span> <span class="mi">1</span>
+ <span class="mi">0</span> <span class="mi">2</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>  <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">dqc</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">dqcdev</span><span class="o">/</span><span class="n">run</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">groupid</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>由于程序需要在创建的虚拟环境中运行，以上cron任务命令中使用Python解释器 <code class="docutils literal notranslate"><span class="pre">/home/user/dqc/bin/python</span></code> 运行 <code class="docutils literal notranslate"><span class="pre">/home/user/dqcdev/run.py</span></code>，另外，该命令使用 <code class="docutils literal notranslate"><span class="pre">-groupid</span></code> 传入校验组参数。关于Python解释器和参数传入可以参考 <a class="reference external" href="https://docs.python.org/zh-cn/3/tutorial/interpreter.html">Python解释器 — Python文档</a></p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">crontab -l  <span class="c1"># 显示当前用户的crontab文件</span></span>
+</pre></div></div></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="debug.html" class="btn btn-neutral float-right" title="日志和调试" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="environment.html" class="btn btn-neutral float-left" title="安装和部署" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; 版权所有 2021, Tingting Chen.
+
+    </p>
+  </div>
+    
+    
+    
+    利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+/*
+
+h1 {
+    border-bottom: 4px solid black;
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+h2 {
+    border-bottom: 2px solid black;
+    width: 75%;
+    padding-bottom: 5px;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.75rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+h5 {
+    font-size: 1.25rem;
+}
+
+h6 {
+    font-size: 1rem;
+}
+
+h1, h2, h3, h4, h5, h6{
+    font-weight: 500;
+ }
+
+
+*/
+
+
+.section li{
+    margin: 0 0 5px;
+}
+
+td{
+    white-space: pre-line !important;
+}
+
+.docutils.literal.notranslate{
+    white-space: pre-line !important;
+}
+
+td>p{
+    line-height: 1.5rem !important;
+}
+
+/* CSS for sphinx-prompt */
+
+.highlight >pre {
+    border: 1px solid #e1e4e5;
+    background: #f1f3f5;
+    overflow-x: auto;
+    padding: 12px 12px;
+  }
+  
+/* Tweak css for sphinx_prompt #5281 */
+.highlight >pre >span[class="prompt1"] {
+font-size: 12px;
+line-height: 1.4;
+}
+
+h5 >.docutils{
+    font-size: 90% !important;
+    font-family: Roboto Slab,ff-tisa-web-pro,Georgia,Arial,sans-serif;
+}
+
+.toctree-l4 > a >.docutils{
+    font-family: Roboto Slab,ff-tisa-web-pro,Georgia,Arial,sans-serif;
+}
+
+ul[class="mylist simple"]{
+    margin-top: -20px;
+}
+
+.nonmodule > div p a[class='reference internal'], div[id="python"] a[class='reference internal'], div[id="sql"] a[class='reference internal'], div[id="python"] a[class='reference external'], .nonmodule a[class='reference external'], .confmodule dl dt em a[class='reference external'], .confmodule dl dd p a[class='reference external'], .confmodule dl dd p a[class='reference internal']{
+    color: #2d6ab0;
+    font-family: Lato,proxima-nova,Helvetica Neue,Arial,sans-serif;
+    box-sizing: border-box;
+    font-size: 75%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+    background: #fff;
+    border: 1px solid #2d6ab0;
+    overflow-x: auto;
+    margin: 2px;
+    padding: 4px;
+}
+
+.confmodule dl dt em a[class='reference external']{
+    margin: 0 !important;
+    padding: 1px !important;
+    border: none !important;
+}
+
+::selection{
+    background: #2980b9;
+    color: #fff;
+    text-shadow: none;
+}
+
+/*
+.sphinx-tabs div[class='wy-table-responsive'], .sphinx-tabs p{
+    margin-bottom: 0;
+}
+
+.sphinx-tabs {
+    margin-top: -20px;
+}
+*/
+
+.admonition .docutils.literal.notranslate{
+    color: #2d6ab0 !important;
+    border: none;
+    background: #dae8f4;
+}
+
+h1 + div > ul > li a[class='reference internal']{
+    font-size: 100% !important;
+    background: None !important;
+    border: None !important;
+}
